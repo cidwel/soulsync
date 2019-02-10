@@ -1,0 +1,87 @@
+<!doctype html>
+<html>
+<head>
+    <title>SoulSync</title>
+    <link rel="stylesheet" href="reset.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+
+<div class="app">
+
+    <input name="addLink" type="text"/>
+    <button type="button" class="btn btn-primary">Add</button>
+
+    <button type="button" class="btn btn-primary" onClick="seekVideo()">Pos at 15:00</button>
+    <button type="button" class="btn btn-primary" onClick="loadVideo('KG5gniA23Wk')">Load other video</button>
+    <button type="button" class="btn btn-primary" onClick="broadcastVideo()">Broadcast</button>
+
+
+
+    <div class="scene">
+
+        <div id="player" class="videoWrapper">
+            <!-- <iframe width="300" height="200" src="https://www.youtube.com/embed/cjQQ9JYGgTM" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> -->
+        </div>
+
+        <div class="list">
+
+            <ul>
+                <!--
+                <li>
+                    Minecraft-Theme Song {Extended for 30 Minutes}
+                </li>
+                <li>
+                    Minecraft-Theme Song {Extended for 30 Minutes}
+                </li>
+
+                -->
+            </ul>
+
+
+        </div>
+
+    </div>
+
+
+</div>
+<script src="/socket.io/socket.io.js"></script>
+<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+<script src="/reload/reload.js"></script>
+<script src="youtube.js"></script>
+<script src="app.js"></script>
+
+<script>
+
+  var socket = io();
+
+  socket.on('hello', function(){
+    console.log('hello world!');
+  });
+
+
+
+  socket.on('playVideo', function(videoData){
+    console.log("Server requested to play video");
+    let {id, second} = videoData;
+    loadVideo(id,second);
+  });
+
+
+  function broadcastVideo() {
+    console.log("sending broadcast to server");
+    socket.emit('playVideo', {
+      id: 'oZEU5DLsfr0',
+      second: 50,
+    });
+
+  }
+
+
+
+</script>
+
+</body>
+</html>

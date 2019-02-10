@@ -1,0 +1,18 @@
+{
+  "name": "soulsync",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "supervisor -q -e 'js|ejs|less|html|css' server.js"
+  },
+  "dependencies": {
+    "express": "^4.16.4",
+    "less": "^3.9.0",
+    "socket.io": "^2.2.0"
+  },
+  "devDependencies": {
+    "eslint-config-airbnb": "^17.1.0",
+    "morgan": "^1.9.1",
+    "reload": "^2.4.0",
+    "supervisor": "^0.12.0"
+  }
+}

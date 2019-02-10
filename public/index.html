@@ -11,7 +11,7 @@
 
 <div class="app">
 
-    <input name="addLink" type="text"/>
+    <input id="addLink" name="addLink" type="text"/>
     <button type="button" class="btn btn-primary">Add</button>
 
     <button type="button" class="btn btn-primary" onClick="seekVideo()">Pos at 15:00</button>
@@ -69,14 +69,25 @@
     loadVideo(id,second);
   });
 
+  function getVideoUrlData() {
+
+    // var videoTest = 'https://www.youtube.com/watch?v=TdBSoy9F9NA&t=2091s';
+    var videoTest = $('#addLink').val()
+    const urlParams = new URLSearchParams(videoTest.split('?')[1]);
+    return {
+      id: urlParams.get('v'),
+      second: (urlParams.get('t') && urlParams.get('t').replace('s','')) || 0,
+    };
+  }
+
 
   function broadcastVideo() {
+    var {id, second } = getVideoUrlData();
     console.log("sending broadcast to server");
     socket.emit('playVideo', {
-      id: 'oZEU5DLsfr0',
-      second: 50,
+      id,
+      second,
     });
-
   }
 
 

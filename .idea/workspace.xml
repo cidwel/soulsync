@@ -149,6 +149,9 @@
       <find>io</find>
     </findStrings>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
@@ -184,6 +187,7 @@
     <option name="width" value="2560" />
     <option name="height" value="1417" />
   </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
@@ -263,16 +267,15 @@
       <option name="presentableId" value="Default" />
       <updated>1549828156220</updated>
       <workItem from="1549828158104" duration="100000" />
-      <workItem from="1549828265469" duration="10042000" />
+      <workItem from="1549828265469" duration="10403000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="10142000" />
+    <option name="totallyTimeSpent" value="10503000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="2560" height="1417" extended-state="0" />
-    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.16481334" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />

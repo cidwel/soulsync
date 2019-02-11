@@ -48,7 +48,7 @@ function loadVideo(id, second = 0) {
   player.loadVideoById(
     {
       'videoId': id,
-      'startSeconds': second
+      // 'startSeconds': second
     }
   );
 }

@@ -33,20 +33,9 @@ io.on('connection', function (socket) {
 
 
 
-  setTimeout(
-    function() {
-      // socket.emit('playVideo', { id: 'KG5gniA23Wk', second: 100});
-    }, 3000);
-
-
-  socket.on('my other event', function (data) {
-    console.log(data);
-  });
-
   socket.on('playVideo',function(videoData){
     const {id, second} = videoData;
     console.log('Client send play video. Broadcasting!!');
-    // socket.broadcast.emit('playVideo', { id, second }); // < not for sender
     io.emit('playVideo', { id, second });
   });
 

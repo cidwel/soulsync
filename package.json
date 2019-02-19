@@ -2,8 +2,7 @@
   "name": "soulsync",
   "version": "1.0.0",
   "scripts": {
-    "build": "watchify public/app.js -o --s public/bundle.js -v",
-    "start": "watchify public/app.js --standalone bundle -o public/bundle.js -v | supervisor -q -e 'js|ejs|less|html|css' server.js",
+    "start": "node server.js",
     "super": "supervisor -q -e 'js|ejs|less|html|css' server.js"
   },
   "dependencies": {

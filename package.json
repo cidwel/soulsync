@@ -2,16 +2,24 @@
   "name": "soulsync",
   "version": "1.0.0",
   "scripts": {
-    "start": "node server.js",
-    "start super": "supervisor -q -e 'js|ejs|less|html|css' server.js"
+    "build": "watchify public/app.js -o --s public/bundle.js -v",
+    "start": "watchify public/app.js --standalone bundle -o public/bundle.js -v | supervisor -q -e 'js|ejs|less|html|css' server.js",
+    "super": "supervisor -q -e 'js|ejs|less|html|css' server.js"
   },
   "dependencies": {
+    "browserify": "^16.2.3",
+    "eslint": "^5.13.0",
     "express": "^4.16.4",
     "less": "^3.9.0",
-    "socket.io": "^2.2.0"
+    "random-animal-name-generator": "^0.1.0",
+    "socket.io": "^2.2.0",
+    "watchify": "^3.11.0",
+    "youtube-thumbnail": "^1.3.0"
   },
   "devDependencies": {
+    "concurrently": "^4.1.0",
     "eslint-config-airbnb": "^17.1.0",
+    "get-youtube-id": "^1.0.1",
     "morgan": "^1.9.1"
   }
 }

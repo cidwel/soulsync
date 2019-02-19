@@ -34,8 +34,22 @@
 
 }
 
+#connectedClients {
+    border: black thin solid;
+    padding: 4px;
+}
 
 #addLink {
     width: 400px;
     font-size: 10px;
+    height: 40px;
+}
+
+.btn-play {
+    border-radius: 40px;
+    width: 40px;
+    height: 40px;
+}
+#controls {
+    padding:10px;
 }

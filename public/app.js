@@ -39,7 +39,7 @@ socket.on('playVideo', function(videoData){
 socket.on('newConnection', function(data){
 
   if (window.clientName === data.clientName) {
-    console.log("Yeah! Server is notification all the friends!")
+    console.log("Yeah! Server is notificating all the friends!")
   } else {
     console.log("Oh! Server says A new friend! Let's send our progress!");
     notifyVideoStatus({
@@ -53,10 +53,10 @@ socket.on('newConnection', function(data){
 })
 
 
-socket.on("ping", function(data){
+socket.on("ping", function(){
+  debugger;
   console.log("Server says ping! Let's reply that fucker!!");
-
-  socket.emit('pong', {
+  socket.emit('pong2', {
     clientName: window.clientName,
   });
 
@@ -119,7 +119,6 @@ function getVideoUrlData() {
 }
 
 window.broadcastVideo = function () {
-  debugger;
   let {id, second } = getVideoUrlData();
   console.log("sending broadcast to server");
   socket.emit('playVideo', {

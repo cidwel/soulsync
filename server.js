@@ -43,7 +43,7 @@ const notifyNewConnection = (data) => {
 
 const sendPingToClients = () => {
   console.log("Let's ping all the users!");
-  io.emit('ping', data );
+  io.emit('ping' );
   connectedClients = []; // we clean the connected clients stack
 }
 
@@ -53,6 +53,12 @@ io.on('connection', function (socket) {
   var total=io.engine.clientsCount;
 
   console.log("Client found! " + total + " client(s) online");
+
+  socket.on('disconnect', function() {
+    console.log('Got disconnect!');
+    sendPingToClients();
+  });
+
 
   socket.on('clientReady',function(clientData){
     connectedClients.push(clientData.clientName);
@@ -66,7 +72,8 @@ io.on('connection', function (socket) {
   });
 
 
-  socket.on('pong',function(clientData){
+  socket.on('pong2',function(clientData){
+    console.log("Pong! " + clientData.clientName)
     connectedClients.push(clientData.clientName);
     io.emit('updateConnectedClients', connectedClients );
 
@@ -90,7 +97,7 @@ io.on('connection', function (socket) {
       notifyTimer = 0;
       console.log("Locked notifyStatus!! for client: videoData")
 
-      io.emit('playVideo', { id, second });
+      // io.emit('playVideo', { id, second });
       // sendPingToClients();
     }
   });

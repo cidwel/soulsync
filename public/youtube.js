@@ -39,7 +39,6 @@ function onPlayerStateChange(event) {
 
   if (event.data == YT.PlayerState.PLAYING) {
 
-    debugger;
     console.log("Oh! Seems the seekbar changed!");
     window.socket.emit('videoSeekChanged', {
       clientName: window.clientName,

@@ -39,6 +39,9 @@
     padding: 4px;
 }
 
+#clientName {
+    font-weight: bold;
+}
 #addLink {
     width: 400px;
     font-size: 10px;

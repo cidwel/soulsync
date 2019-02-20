@@ -24,7 +24,10 @@ function onYouTubeIframeAPIReady() {
 function onPlayerReady (event)  {
   console.log("Yay! I'm ready, let's notify master!");
   window.socket.emit('clientReady', {
-    clientName: window.clientName
+    clientName: window.clientName,
+    videoId: player.getVideoData().video_id,
+    time: player.getCurrentTime(),
+    title: player.getVideoData().title,
   });
 
 }
@@ -47,6 +50,7 @@ function onPlayerStateChange(event) {
     });
 
     player.playVideo();
+    // window.startTime(currentTime);
 
     // setTimeout(stopVideo, 6000);
   } else if (event.data == YT.PlayerState.PAUSED) {
@@ -56,7 +60,12 @@ function onPlayerStateChange(event) {
       videoId: player.getVideoData().video_id,
     });
 
+    // window.pauseTime(currentTime);
+
   }
+  window.checkSync();
+  // window.updateTime(currentTime);
+
 }
 function stopVideo() {
   player.stopVideo();

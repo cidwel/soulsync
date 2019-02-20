@@ -22,6 +22,7 @@
 .list ul {
     padding: 0px;
     margin: 0px;
+    margin-bottom: 0;
 }
 .list ul li {
 
@@ -31,12 +32,27 @@
     padding: 20px;
     list-style: none;
     color: white;
+    margin-bottom: 0;
 
+
+}
+.synced{
+    color: green;
+}
+.unsynced {
+    color: red;
 }
 
 #connectedClients {
     border: black thin solid;
     padding: 4px;
+    margin-top: 0;
+    margin-bottom: 0;
+    display: inline-block;
+}
+
+#connectedClients ul {
+    margin-bottom: 0px;
 }
 
 #clientName {

@@ -14,6 +14,8 @@ var notifyTimerClickSeconds = 1;
 
 var connectedClients = [];
 
+var syncedClients = [];
+
 setInterval(() => {
   notifyTimer++;
 }, notifyTimerClickSeconds*1000);
@@ -61,20 +63,24 @@ io.on('connection', function (socket) {
 
 
   socket.on('clientReady',function(clientData){
-    connectedClients.push(clientData.clientName);
+    if (!connectedClients.find(x => x.clientName === clientData.clientName)) {
+      connectedClients.push(clientData);
+    }
+
     io.emit('updateConnectedClients', connectedClients );
     console.log("New client found: " + clientData.clientName + " ,let's notify others");
     notifyNewConnection({
       total,
       ...clientData,
     });
-
   });
 
 
   socket.on('pong2',function(clientData){
     console.log("Pong! " + clientData.clientName)
-    connectedClients.push(clientData.clientName);
+    if (!connectedClients.find(x => x.clientName === clientData.clientName)) {
+      connectedClients.push(clientData);
+    }
     io.emit('updateConnectedClients', connectedClients );
 
   });
@@ -112,6 +118,12 @@ io.on('connection', function (socket) {
       second: time,
       playOnlyFor: requestedBy
     });
+
+    // io.emit('updateConnectedClients', connectedClients );
+
+    syncData();
+
+
 
   });
 
@@ -162,6 +174,26 @@ io.on('connection', function (socket) {
 
   });
 
+  const syncData = () => {
+    syncedClients = [];
+    console.log("A client asked for sync data!")
+    io.emit('checkSyncAsk');
+  }
+
+  socket.on('checkSync', (clientData) => {
+    syncData();
+  });
+
+  socket.on('checkSyncGet', (clientData) => {
+    if (!syncedClients.find(x => x.clientName === clientData.clientName)) {
+      syncedClients.push(clientData);
+    }
+    if (syncedClients.length === connectedClients.length) {
+      console.log("All clients sent their data.. we send sync info!")
+      io.emit('checkSyncResults', syncedClients);
+      syncedClients = []; // clear the poll!
+    }
+  });
 
 
 
@@ -171,7 +203,13 @@ io.on('connection', function (socket) {
 
 
 
-});
+
+
+
+
+
+
+  });
 
 
 

@@ -24,6 +24,8 @@ function onYouTubeIframeAPIReady() {
 function onPlayerReady (event)  {
   console.log("Yay! I'm ready, let's notify master!");
   window.socket.emit('clientReady', window.getStatus());
+  debugger;
+  window.syncVideo();
 
 }
 

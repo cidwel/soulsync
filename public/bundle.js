@@ -10917,9 +10917,9 @@ socket.on('playVideo', function(videoData){
 
   if (send) {
     if (mode == "pause") {
-      console.log("Server requested to pause video");
+      log("Server requested to pause video");
     } else {
-      console.log("Server requested to play video");
+      log("Server requested to play video");
     }
     let {videoId, time} = videoData;
     loadVideo(videoId, time, mode);
@@ -10930,7 +10930,7 @@ socket.on('playVideo', function(videoData){
 
 function updateClientsData(clientsData) {
 
-  console.log("Received a new client list... let's update it");
+  log("Received a new client list... let's update it");
 
   let allSameVideo = clientsData.map(x => x.videoId).every( (val, i, arr) => val === arr[0] );
   let allSameTime = clientsData.map(x => x.time).every( (val, i, arr) => Math.abs(Math.trunc(val) - Math.trunc(arr[0])) < 2 );
@@ -11037,12 +11037,12 @@ window.getStatus = function () {
 
 
 window.broadcastVideo = function () {
-  console.log("sending broadcast to server");
+  log("sending broadcast to server");
   socket.emit('playVideo', getVideoUrlData());
 }
 
 window.syncVideo = function () {
-  console.log("Let's ask server for the updated time!");
+  log("Let's ask server for the updated time!");
 
   socket.emit('askRunningVideoData', {
     clientName: window.clientName,
@@ -11051,21 +11051,21 @@ window.syncVideo = function () {
 };
 
 window.checkSync = function () {
-  console.log("Let's ask the server for sync data");
+  log("Let's ask the server for sync data");
   socket.emit('checkSync', {
     clientName: window.clientName,
   });
 };
 
 window.pauseVideo = function () {
-  console.log("Let's send a pause event through the server!!");
+  log("Let's send a pause event through the server!!");
   socket.emit('videoPausedGlobal', {
     clientName: window.clientName,
   });
 };
 
 window.continueVideo = function () {
-  console.log("Let's send a continue event through the server!!");
+  log("Let's send a continue event through the server!!");
   socket.emit('videoContinueGlobal', {
     clientName: window.clientName,
   });
@@ -11096,6 +11096,10 @@ function uuidv4() {
 }
 
 
+function log(string) {
+  console.log(`[${window.clientName}] ${string}`)
+}
+
 /*
 
 window.updateTime = function (seconds) {
@@ -11122,7 +11126,7 @@ window.startTime = function (refreshData) {
 /*
 setInterval(function(){
   if (clientTimerStatus == timer_playing) {
-    console.log("click");
+    log("click");
     clientTimerSeconds++;
     $("#personalTime").text(secondsToClock(clientTimerSeconds))
   }

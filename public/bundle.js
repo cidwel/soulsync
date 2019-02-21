@@ -10848,9 +10848,88 @@ if (require.main === module) {
 module.exports = generateRandomAnimalName
 
 },{"./adjectives.json":2,"./animals.json":3}],5:[function(require,module,exports){
+'use strict';
+
+var getYouTubeID = require('get-youtube-id');
+
+module.exports = function(url){
+  var id = getYouTubeID(url);
+
+  if(!id && url.length === 11){
+    id = url
+  }
+
+  return {
+    'default': {
+      url: 'http://img.youtube.com/vi/' + id + '/default.jpg',
+      width: 120,
+      height: 90
+    },
+    medium: {
+      url: 'http://img.youtube.com/vi/' + id + '/mqdefault.jpg',
+      width: 320,
+      height: 180
+    },
+    high: {
+      url: 'http://img.youtube.com/vi/' + id + '/hqdefault.jpg',
+      width: 480,
+      height: 360
+    },
+  }
+};
+
+},{"get-youtube-id":6}],6:[function(require,module,exports){
+
+(function (root, factory) {
+  if (typeof exports === 'object') {
+    module.exports = factory();
+  } else if (typeof define === 'function' && define.amd) {
+    define(factory);
+  } else {
+    root.getYouTubeID = factory();
+  }
+}(this, function (exports) {
+
+  return function (url) {
+    if (/youtu\.?be/.test(url)) {
+
+      // Look first for known patterns
+      var i;
+      var patterns = [
+        /youtu\.be\/([^#\&\?]{11})/,  // youtu.be/<id>
+        /\?v=([^#\&\?]{11})/,         // ?v=<id>
+        /\&v=([^#\&\?]{11})/,         // &v=<id>
+        /embed\/([^#\&\?]{11})/,      // embed/<id>
+        /\/v\/([^#\&\?]{11})/         // /v/<id>
+      ];
+
+      // If any pattern matches, return the ID
+      for (i = 0; i < patterns.length; ++i) {
+        if (patterns[i].test(url)) {
+          return patterns[i].exec(url)[1];
+        }
+      }
+
+      // If that fails, break it apart by certain characters and look 
+      // for the 11 character key
+      var tokens = url.split(/[\/\&\?=#\.\s]/g);
+      for (i = 0; i < tokens.length; ++i) {
+        if (/^[^#\&\?]{11}$/.test(tokens[i])) {
+          return tokens[i];
+        }
+      }
+    }
+
+    return null;
+  };
+
+}));
+
+},{}],7:[function(require,module,exports){
 let getYoutubeId = require('get-youtube-id');
 
 const generateRandomAnimalName = require('random-animal-name-generator');
+const youtubeThumbnail = require('youtube-thumbnail');
 
 const chime = new Audio('chime.wav');
 chime.volume = 0.02;
@@ -10867,6 +10946,8 @@ timer_playing = 1;
 window.clientTimer = null;
 window.clientTimerStatus = timer_pause;
 window.clientTimerSeconds = 0;
+
+window.videoHistory = [];
 
 
 /*
@@ -11022,8 +11103,25 @@ function getVideoUrlData() {
   };
 }
 
+function refreshHistory() {
+
+  const videoHistoryCopy = window.videoHistory.slice(0).reverse();
+  const videoList = videoHistoryCopy.reduce((old,curr) => {
+    return `${old}
+      <li videoId="${curr.videoId}" onClick={broadcastVideo("${curr.videoId}")}>
+        <div ><img class="thumbnail" src="${curr.thumbnail.default.url}"/></div>
+        <div class="thumbTextWrapper">${curr.title}<br><span class="duration">${secondsToClock(curr.duration)}</span></div>
+      </li>
+    `;
+  }, "");
+
+  $(".listHistory").html(`<ul>${videoList}</ul>`);
+
+}
+
 window.getStatus = function () {
   const videoData = player && player.getVideoData();
+  const videoUrl = player.getVideoUrl();
   return {
     clientId: window.clientId,
     clientName: window.clientName,
@@ -11031,14 +11129,20 @@ window.getStatus = function () {
     time: player.getCurrentTime(),
     title: videoData && videoData.title || null,
     status: player.getPlayerState(),
+    url: videoUrl,
+    thumbnail: youtubeThumbnail(videoUrl),
+    duration: player.getDuration(),
+
   }
 }
 
 
 
-window.broadcastVideo = function () {
+window.broadcastVideo = function (videoId = null) {
   log("sending broadcast to server");
-  socket.emit('playVideo', getVideoUrlData());
+  debugger;
+  const videoData = (videoId) ? {videoId, time: 0} : getVideoUrlData();
+  socket.emit('playVideo', videoData);
 }
 
 window.syncVideo = function () {
@@ -11088,6 +11192,14 @@ window.secondsToClock = function (sec) {
 }
 
 
+window.addToHistory = function (playerStatus) {
+  if (window.videoHistory.length === 0 || window.videoHistory[window.videoHistory.length-1].videoId !== playerStatus.videoId) {
+    window.videoHistory.push(playerStatus);
+  }
+  refreshHistory();
+
+}
+
 function uuidv4() {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
     let r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
@@ -11099,6 +11211,8 @@ function uuidv4() {
 function log(string) {
   console.log(`[${window.clientName}] ${string}`)
 }
+
+
 
 /*
 
@@ -11134,5 +11248,5 @@ setInterval(function(){
 */
 
 
-},{"get-youtube-id":1,"random-animal-name-generator":4}]},{},[5])(5)
+},{"get-youtube-id":1,"random-animal-name-generator":4,"youtube-thumbnail":5}]},{},[7])(7)
 });

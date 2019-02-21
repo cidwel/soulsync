@@ -24,7 +24,6 @@ function onYouTubeIframeAPIReady() {
 function onPlayerReady (event)  {
   console.log("Yay! I'm ready, let's notify master!");
   window.socket.emit('clientReady', window.getStatus());
-  debugger;
   window.syncVideo();
 
 }
@@ -38,6 +37,8 @@ function onPlayerStateChange(event) {
   let currentTime = player.getCurrentTime();
 
   if (event.data == YT.PlayerState.PLAYING) {
+
+    window.addToHistory(window.getStatus());
 
     console.log("Oh! Seems the seekbar changed!");
     window.socket.emit('videoSeekChanged', window.getStatus());

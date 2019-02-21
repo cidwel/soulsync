@@ -1,6 +1,7 @@
 let getYoutubeId = require('get-youtube-id');
 
 const generateRandomAnimalName = require('random-animal-name-generator');
+const youtubeThumbnail = require('youtube-thumbnail');
 
 const chime = new Audio('chime.wav');
 chime.volume = 0.02;
@@ -17,6 +18,8 @@ timer_playing = 1;
 window.clientTimer = null;
 window.clientTimerStatus = timer_pause;
 window.clientTimerSeconds = 0;
+
+window.videoHistory = [];
 
 
 /*
@@ -172,8 +175,25 @@ function getVideoUrlData() {
   };
 }
 
+function refreshHistory() {
+
+  const videoHistoryCopy = window.videoHistory.slice(0).reverse();
+  const videoList = videoHistoryCopy.reduce((old,curr) => {
+    return `${old}
+      <li videoId="${curr.videoId}" onClick={broadcastVideo("${curr.videoId}")}>
+        <div ><img class="thumbnail" src="${curr.thumbnail.default.url}"/></div>
+        <div class="thumbTextWrapper">${curr.title}<br><span class="duration">${secondsToClock(curr.duration)}</span></div>
+      </li>
+    `;
+  }, "");
+
+  $(".listHistory").html(`<ul>${videoList}</ul>`);
+
+}
+
 window.getStatus = function () {
   const videoData = player && player.getVideoData();
+  const videoUrl = player.getVideoUrl();
   return {
     clientId: window.clientId,
     clientName: window.clientName,
@@ -181,14 +201,20 @@ window.getStatus = function () {
     time: player.getCurrentTime(),
     title: videoData && videoData.title || null,
     status: player.getPlayerState(),
+    url: videoUrl,
+    thumbnail: youtubeThumbnail(videoUrl),
+    duration: player.getDuration(),
+
   }
 }
 
 
 
-window.broadcastVideo = function () {
+window.broadcastVideo = function (videoId = null) {
   log("sending broadcast to server");
-  socket.emit('playVideo', getVideoUrlData());
+  debugger;
+  const videoData = (videoId) ? {videoId, time: 0} : getVideoUrlData();
+  socket.emit('playVideo', videoData);
 }
 
 window.syncVideo = function () {
@@ -238,6 +264,14 @@ window.secondsToClock = function (sec) {
 }
 
 
+window.addToHistory = function (playerStatus) {
+  if (window.videoHistory.length === 0 || window.videoHistory[window.videoHistory.length-1].videoId !== playerStatus.videoId) {
+    window.videoHistory.push(playerStatus);
+  }
+  refreshHistory();
+
+}
+
 function uuidv4() {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
     let r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
@@ -249,6 +283,8 @@ function uuidv4() {
 function log(string) {
   console.log(`[${window.clientName}] ${string}`)
 }
+
+
 
 /*
 

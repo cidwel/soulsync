@@ -1,6 +1,11 @@
 let getYoutubeId = require('get-youtube-id');
 
 const generateRandomAnimalName = require('random-animal-name-generator');
+
+const chime = new Audio('chime.wav');
+chime.volume = 0.02;
+
+
 window.socket = io();
 window.clientName = generateRandomAnimalName();
 window.clientId = uuidv4();
@@ -101,7 +106,6 @@ function updateClientsData(clientsData) {
   if (clientsData.length > 1) {
     $(".clientNameWrapper").hide();
 
-    debugger;
     if (allSameVideo && allSameTime) {
       $("#syncMeter").html(`<span class="synced">Synced</span>`)
     } else {
@@ -144,6 +148,12 @@ socket.on("checkSyncAsk", function() {
 socket.on("updateClientResults", function(syncedClients) {
   updateClientsData(syncedClients);
 
+})
+
+socket.on("newClient", function(newClient) {
+  if (newClient.clientId !== window.clientId) {
+    chime.play();
+  }
 })
 
 function sendVideoStatusToServer(videoData) {

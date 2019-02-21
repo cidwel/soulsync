@@ -4,8 +4,6 @@
     <list default="true" id="2558684d-4fb2-4523-9c7e-3209c6813840" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/public/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/app.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/bundle.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/bundle.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/public/style.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/youtube.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/youtube.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server.js" beforeDir="false" afterPath="$PROJECT_DIR$/server.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -21,21 +19,21 @@
     <session id="-1437764555">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="10" />
+          <entry key="project.closed" value="11" />
           <entry key="project.open.time.0" value="1" />
           <entry key="project.open.time.11" value="1" />
           <entry key="project.open.time.2" value="5" />
           <entry key="project.open.time.21" value="1" />
           <entry key="project.open.time.3" value="2" />
-          <entry key="project.open.time.6" value="1" />
-          <entry key="project.opened" value="11" />
+          <entry key="project.open.time.6" value="2" />
+          <entry key="project.opened" value="12" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
           <entry key="css" value="4" />
           <entry key="html" value="9" />
-          <entry key="js" value="24" />
+          <entry key="js" value="25" />
           <entry key="json" value="4" />
         </counts>
       </usages-collector>
@@ -44,7 +42,7 @@
           <entry key="CSS" value="4" />
           <entry key="HTML" value="8" />
           <entry key="JSON" value="4" />
-          <entry key="JavaScript" value="24" />
+          <entry key="JavaScript" value="25" />
           <entry key="Scratch" value="1" />
         </counts>
       </usages-collector>
@@ -52,7 +50,7 @@
         <counts>
           <entry key="css" value="1115" />
           <entry key="html" value="1943" />
-          <entry key="js" value="11978" />
+          <entry key="js" value="12107" />
           <entry key="json" value="357" />
         </counts>
       </usages-collector>
@@ -61,7 +59,7 @@
           <entry key="CSS" value="1116" />
           <entry key="HTML" value="1943" />
           <entry key="JSON" value="357" />
-          <entry key="JavaScript" value="11977" />
+          <entry key="JavaScript" value="12106" />
         </counts>
       </usages-collector>
     </session>
@@ -70,23 +68,23 @@
     <favorites_list name="soulsync" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.36402673">
+    <splitter split-orientation="horizontal" split-proportion="0.46160635">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
           <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/public/index.html">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="422">
-                  <caret line="29" column="14" lean-forward="true" selection-start-line="29" selection-start-column="14" selection-end-line="29" selection-end-column="14" />
+                <state relative-caret-position="522">
+                  <caret line="29" column="14" selection-start-line="29" selection-start-column="14" selection-end-line="29" selection-end-column="14" />
                 </state>
               </provider>
             </entry>
           </file>
-          <file pinned="false" current-in-tab="false">
+          <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/server.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="198">
-                  <caret line="11" column="33" lean-forward="true" selection-start-line="11" selection-start-column="33" selection-end-line="11" selection-end-column="33" />
+                <state relative-caret-position="624">
+                  <caret line="58" column="22" selection-start-line="58" selection-start-column="13" selection-end-line="58" selection-end-column="22" />
                 </state>
               </provider>
             </entry>
@@ -94,7 +92,7 @@
           <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/package.json">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="432">
+                <state relative-caret-position="414">
                   <caret line="23" column="22" selection-start-line="23" selection-start-column="22" selection-end-line="23" selection-end-column="22" />
                 </state>
               </provider>
@@ -103,8 +101,8 @@
           <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/public/bundle.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="200264">
-                  <caret line="11124" lean-forward="true" selection-start-line="11124" selection-end-line="11124" />
+                <state relative-caret-position="200232">
+                  <caret line="11134" lean-forward="true" selection-start-line="11134" selection-end-line="11134" />
                 </state>
               </provider>
             </entry>
@@ -114,11 +112,11 @@
               <provider selected="true" editor-type-id="text-editor" />
             </entry>
           </file>
-          <file pinned="false" current-in-tab="true">
+          <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/public/style.css">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="738">
-                  <caret line="41" column="22" selection-start-line="41" selection-start-column="22" selection-end-line="41" selection-end-column="22" />
+                <state relative-caret-position="306">
+                  <caret line="17" column="12" selection-start-line="17" selection-start-column="12" selection-end-line="17" selection-end-column="12" />
                 </state>
               </provider>
             </entry>
@@ -126,14 +124,14 @@
         </leaf>
       </split-first>
       <split-second>
-        <splitter split-orientation="vertical" split-proportion="0.28820115">
+        <splitter split-orientation="vertical" split-proportion="0.5591623">
           <split-first>
             <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
               <file pinned="false" current-in-tab="true">
                 <entry file="file://$PROJECT_DIR$/public/app.js">
                   <provider selected="true" editor-type-id="text-editor">
-                    <state relative-caret-position="62">
-                      <caret line="27" column="23" selection-start-line="27" selection-start-column="6" selection-end-line="27" selection-end-column="23" />
+                    <state relative-caret-position="90">
+                      <caret line="5" column="19" selection-start-line="5" selection-start-column="19" selection-end-line="5" selection-end-column="19" />
                     </state>
                   </provider>
                 </entry>
@@ -141,8 +139,8 @@
               <file pinned="false" current-in-tab="false">
                 <entry file="file://$PROJECT_DIR$/public/youtube.js">
                   <provider selected="true" editor-type-id="text-editor">
-                    <state relative-caret-position="216">
-                      <caret line="12" column="35" selection-start-line="12" selection-start-column="35" selection-end-line="12" selection-end-column="35" />
+                    <state relative-caret-position="180">
+                      <caret line="10" column="11" lean-forward="true" selection-start-line="10" selection-start-column="11" selection-end-line="10" selection-end-column="11" />
                     </state>
                   </provider>
                 </entry>
@@ -150,12 +148,12 @@
             </leaf>
           </split-first>
           <split-second>
-            <leaf>
+            <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
               <file pinned="false" current-in-tab="true">
                 <entry file="file://$PROJECT_DIR$/public/app.js">
                   <provider selected="true" editor-type-id="text-editor">
-                    <state relative-caret-position="414">
-                      <caret line="96" column="55" selection-start-line="96" selection-start-column="55" selection-end-line="96" selection-end-column="55" />
+                    <state relative-caret-position="211">
+                      <caret line="150" column="2" lean-forward="true" selection-start-line="150" selection-start-column="2" selection-end-line="151" />
                     </state>
                   </provider>
                 </entry>
@@ -175,7 +173,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>#addLink').val(`https://www.youtube.com/watch?v=${id}&amp;t=${Math.trunc(second)}`)</find>
       <find>symc</find>
       <find>onlyf</find>
       <find>sendvideostatus</find>
@@ -200,11 +197,12 @@
       <find>setinterva</find>
       <find>checkSyncAsk</find>
       <find>getStatus</find>
-      <find>debugger</find>
       <find>syncda</find>
       <find>status_</find>
       <find>state_</find>
       <find>checkSyncGet</find>
+      <find>newClient</find>
+      <find>debugger</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -220,8 +218,8 @@
         <option value="$PROJECT_DIR$/package.json" />
         <option value="$PROJECT_DIR$/public/index.html" />
         <option value="$PROJECT_DIR$/public/youtube.js" />
-        <option value="$PROJECT_DIR$/server.js" />
         <option value="$PROJECT_DIR$/public/style.css" />
+        <option value="$PROJECT_DIR$/server.js" />
         <option value="$PROJECT_DIR$/public/app.js" />
       </list>
     </option>
@@ -251,7 +249,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -268,6 +265,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -339,12 +337,13 @@
       <workItem from="1550574267195" duration="1186000" />
       <workItem from="1550613193036" duration="12944000" />
       <workItem from="1550693639052" duration="6609000" />
-      <workItem from="1550701183271" duration="9019000" />
+      <workItem from="1550701183271" duration="9453000" />
+      <workItem from="1550785639371" duration="354000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="74556000" />
+    <option name="totallyTimeSpent" value="75344000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -356,10 +355,10 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="23" width="2560" height="1417" extended-state="6" />
+    <frame x="0" y="23" width="2560" height="1417" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49790794" visible="true" weight="0.16759333" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49790794" visible="true" weight="0.100079425" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" sideWeight="0.50209206" side_tool="true" weight="0.16165951" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -371,7 +370,7 @@
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32925898" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="8" weight="0.32925898" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="9" visible="true" weight="0.09854851" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="9" visible="true" weight="0.27043545" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -436,63 +435,57 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/node_modules/has-binary2/index.js">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
+        <state relative-caret-position="522">
+          <caret line="29" column="14" selection-start-line="29" selection-start-column="14" selection-end-line="29" selection-end-column="14" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/require.js">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/package.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="432">
+        <state relative-caret-position="414">
           <caret line="23" column="22" selection-start-line="23" selection-start-column="22" selection-end-line="23" selection-end-column="22" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/public/bundle.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="200264">
-          <caret line="11124" lean-forward="true" selection-start-line="11124" selection-end-line="11124" />
+        <state relative-caret-position="200232">
+          <caret line="11134" lean-forward="true" selection-start-line="11134" selection-end-line="11134" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="422">
-          <caret line="29" column="14" lean-forward="true" selection-start-line="29" selection-start-column="14" selection-end-line="29" selection-end-column="14" />
-        </state>
-      </provider>
+    <entry file="file://$PROJECT_DIR$/public/require.js">
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/youtube.js">
+    <entry file="file://$PROJECT_DIR$/public/style.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="216">
-          <caret line="12" column="35" selection-start-line="12" selection-start-column="35" selection-end-line="12" selection-end-column="35" />
+        <state relative-caret-position="306">
+          <caret line="17" column="12" selection-start-line="17" selection-start-column="12" selection-end-line="17" selection-end-column="12" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/server.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="198">
-          <caret line="11" column="33" lean-forward="true" selection-start-line="11" selection-start-column="33" selection-end-line="11" selection-end-column="33" />
+        <state relative-caret-position="624">
+          <caret line="58" column="22" selection-start-line="58" selection-start-column="13" selection-end-line="58" selection-end-column="22" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/style.css">
+    <entry file="file://$PROJECT_DIR$/public/youtube.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="738">
-          <caret line="41" column="22" selection-start-line="41" selection-start-column="22" selection-end-line="41" selection-end-column="22" />
+        <state relative-caret-position="180">
+          <caret line="10" column="11" lean-forward="true" selection-start-line="10" selection-start-column="11" selection-end-line="10" selection-end-column="11" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/public/app.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="414">
-          <caret line="96" column="55" selection-start-line="96" selection-start-column="55" selection-end-line="96" selection-end-column="55" />
+        <state relative-caret-position="90">
+          <caret line="5" column="19" selection-start-line="5" selection-start-column="19" selection-end-line="5" selection-end-column="19" />
         </state>
       </provider>
     </entry>

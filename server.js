@@ -56,6 +56,7 @@ io.on('connection', function (socket) {
     addClientInList(clientData);
     console.log("New client found: " + clientData.clientName + " ,let's notify others");
     io.emit('updateClientResults', connectedClients);
+    io.emit('newClient', clientData)
 
   });
 
@@ -81,7 +82,6 @@ io.on('connection', function (socket) {
   });
 
   socket.on('videoSeekChanged',function(data){
-    debugger;
     console.log(`"${data.clientName}" changed the seek bar!! Let's update it!`);
     const {videoId, time, clientId} = data;
     requestPlayVideo({

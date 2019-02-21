@@ -10853,6 +10853,7 @@ let getYoutubeId = require('get-youtube-id');
 const generateRandomAnimalName = require('random-animal-name-generator');
 window.socket = io();
 window.clientName = generateRandomAnimalName();
+window.clientId = uuidv4();
 
 
 timer_pause = 0;
@@ -10863,18 +10864,46 @@ window.clientTimerStatus = timer_pause;
 window.clientTimerSeconds = 0;
 
 
+/*
+-1 - unstarted (sin empezar)
+0 - ended (terminado)
+1 - playing (en reproducción)
+2 - paused (en pausa)
+3 - buffering (almacenando en búfer)
+5 - video cued (video en fila)
+*/
+
+const YT_STATUS_UNSTARTED = -1;
+const YT_STATUS_ENDED = 0;
+const YT_STATUS_PLAYING = 1;
+const YT_STATUS_PAUSED = 2;
+const YT_STATUS_BUFFERING = 3;
+const YT_STATUS_CUED = 5;
+
+const ytStatus = [];
+ytStatus[-1] = "Unstarted";
+ytStatus[0] = "Ended";
+ytStatus[1] = "Playing";
+ytStatus[2] = "Paused";
+ytStatus[3] = "Buffering";
+ytStatus[4] = "Unknown";
+ytStatus[5] = "Cued";
+
+
+
+
 $("#clientName").text(window.clientName);
 
 socket.on('playVideo', function(videoData){
   const {playOnlyFor, playNotFor, mode} = videoData;
 
-  if (playNotFor && window.clientName === playNotFor) {
+  if (playNotFor && window.clientId === playNotFor) {
     return; // early return!
   }
 
   let send = false;
   if (playOnlyFor) {
-    if (playOnlyFor === window.clientName) {
+    if (playOnlyFor === window.clientId) {
       send = true;
     }
   } else {
@@ -10887,50 +10916,19 @@ socket.on('playVideo', function(videoData){
     } else {
       console.log("Server requested to play video");
     }
-    let {id, second} = videoData;
-    loadVideo(id, second, mode);
-    $('#addLink').val(`https://www.youtube.com/watch?v=${id}&t=${Math.trunc(second)}`)
+    let {videoId, time} = videoData;
+    loadVideo(videoId, time, mode);
+    $('#addLink').val(`https://www.youtube.com/watch?v=${videoId}&t=${Math.trunc(time)}`)
   }
 });
 
-
-socket.on('newConnection', function(data){
-
-  if (window.clientName === data.clientName) {
-    console.log("Yeah! Server is notificating all the friends!")
-  } else {
-    console.log("Oh! Server says A new friend! Let's send our progress!");
-    notifyVideoStatus({
-      videoId: player.getVideoData().video_id,
-      time: player.getCurrentTime(),
-      clientName: window.clientName,
-    });
-  }
-
-})
-
-
-socket.on("ping", function(){
-  console.log("Server says ping! Let's reply that fucker!!");
-  socket.emit('pong2', {
-    clientName: window.clientName,
-    videoId: player.getVideoData().video_id,
-    time: player.getCurrentTime(),
-    title: player.getVideoData().title,
-  });
-
-})
-
-socket.on("updateConnectedClients", function(connectedClients){
-  updateClientsData(connectedClients);
-})
 
 function updateClientsData(clientsData) {
 
   console.log("Received a new client list... let's update it");
 
-  const allSameVideo = clientsData.map(x => x.videoId).every( (val, i, arr) => val === arr[0] );
-  const allSameTime = clientsData.map(x => x.time).every( (val, i, arr) => Math.abs(Math.trunc(val) - Math.trunc(arr[0])) < 2 );
+  let allSameVideo = clientsData.map(x => x.videoId).every( (val, i, arr) => val === arr[0] );
+  let allSameTime = clientsData.map(x => x.time).every( (val, i, arr) => Math.abs(Math.trunc(val) - Math.trunc(arr[0])) < 2 );
 
   clientsData.sort((a,b) => (a.clientName > b.clientName) ? 1 : ((b.clientName > a.clientName) ? -1 : 0));
 
@@ -10941,10 +10939,19 @@ function updateClientsData(clientsData) {
 
     let clockText = (!allSameTime) ? clock : '';
 
-    return old + `<li>${curr.clientName}${allSameVideoCaption} ${clockText}</li>`;
-  }, "");
-  if (clientsData.length > 1) {
+    const youText = (curr.clientName === window.clientName) ? '(You) ' : '';
+    const youClass = (curr.clientName === window.clientName) ? 'currentUser' : '';
 
+    const statusText = (curr.status !== YT_STATUS_PLAYING) ? `<span class=status status_${curr.status}">[${ytStatus[curr.status]}]</span> - ` : '';
+
+    return old + `<li class="${youClass}">${statusText}${youText}${curr.clientName}${allSameVideoCaption} ${clockText}</li>`;
+  }, "");
+  $("#syncMeter").html('');
+
+  if (clientsData.length > 1) {
+    $(".clientNameWrapper").hide();
+
+    debugger;
     if (allSameVideo && allSameTime) {
       $("#syncMeter").html(`<span class="synced">Synced</span>`)
     } else {
@@ -10955,21 +10962,18 @@ function updateClientsData(clientsData) {
     $("#connectedTotal").html(`Connected users (${clientsData.length}):<br>`)
     $("#connectedClients").html(`<ul>${clients}</ul>`);
   } else {
+    $(".clientNameWrapper").show();
+
     $("#connectedTotal").text(`No one is here!`)
     $("#connectedClients").hide();
   }
-
-
 }
 
-
-socket.on("getVideoStatus", function(requestedBy) {
-  if (window.clientName !== requestedBy) {
+socket.on("getVideoStatus", function(requestedData) {
+  if (window.clientId !== requestedData.clientId) {
     sendVideoStatusToServer({
-      videoId: player.getVideoData().video_id,
-      time: player.getCurrentTime(),
-      clientName: window.clientName,
-      requestedBy,
+      ...getStatus(),
+      requestedBy: requestedData.clientId,
     });
   }
 
@@ -10984,14 +10988,10 @@ socket.on("continueVideo", function() {
 })
 
 socket.on("checkSyncAsk", function() {
-  socket.emit('checkSyncGet', {
-    videoId: player.getVideoData().video_id,
-    time: player.getCurrentTime(),
-    clientName: window.clientName,
-  });
+  socket.emit('checkSyncGet', getStatus());
 })
 
-socket.on("checkSyncResults", function(syncedClients) {
+socket.on("updateClientResults", function(syncedClients) {
   updateClientsData(syncedClients);
 
 })
@@ -11000,12 +11000,6 @@ function sendVideoStatusToServer(videoData) {
   socket.emit('sendVideoStatusToServer', videoData);
 }
 
-
-function notifyVideoStatus(videoData) {
-  socket.emit('notifyStatus', videoData);
-}
-
-
 function getVideoUrlData() {
 
   // let videoTest = 'https://www.youtube.com/watch?v=TdBSoy9F9NA&t=2091s';
@@ -11013,18 +11007,28 @@ function getVideoUrlData() {
   let id = getYoutubeId(videoTest)
   const urlParams = new URLSearchParams(videoTest.split('?')[1]);
   return {
-    id: id,
-    second: +(urlParams.get('t') && urlParams.get('t').replace('s','')) || 0,
+    videoId: id,
+    time: +(urlParams.get('t') && urlParams.get('t').replace('s','')) || 0,
   };
 }
 
+window.getStatus = function () {
+  const videoData = player && player.getVideoData();
+  return {
+    clientId: window.clientId,
+    clientName: window.clientName,
+    videoId: videoData && videoData.video_id || null,
+    time: player.getCurrentTime(),
+    title: videoData && videoData.title || null,
+    status: player.getPlayerState(),
+  }
+}
+
+
+
 window.broadcastVideo = function () {
-  let {id, second } = getVideoUrlData();
   console.log("sending broadcast to server");
-  socket.emit('playVideo', {
-    id,
-    second,
-  });
+  socket.emit('playVideo', getVideoUrlData());
 }
 
 window.syncVideo = function () {
@@ -11032,31 +11036,30 @@ window.syncVideo = function () {
 
   socket.emit('askRunningVideoData', {
     clientName: window.clientName,
+    clientId: window.clientId,
   });
-}
-
-
+};
 
 window.checkSync = function () {
   console.log("Let's ask the server for sync data");
   socket.emit('checkSync', {
     clientName: window.clientName,
   });
-}
+};
 
 window.pauseVideo = function () {
   console.log("Let's send a pause event through the server!!");
   socket.emit('videoPausedGlobal', {
     clientName: window.clientName,
   });
-}
+};
 
 window.continueVideo = function () {
   console.log("Let's send a continue event through the server!!");
   socket.emit('videoContinueGlobal', {
     clientName: window.clientName,
   });
-}
+};
 
 window.secondsToClock = function (sec) {
   let sec_num = parseInt(sec, 10); // don't forget the second param
@@ -11073,6 +11076,15 @@ window.secondsToClock = function (sec) {
     return +minutes+':'+seconds;
   }
 }
+
+
+function uuidv4() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    let r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
+
 
 /*
 

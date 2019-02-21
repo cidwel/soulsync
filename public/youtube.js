@@ -23,12 +23,7 @@ function onYouTubeIframeAPIReady() {
 //4. The API  will call this function when the video player is ready.
 function onPlayerReady (event)  {
   console.log("Yay! I'm ready, let's notify master!");
-  window.socket.emit('clientReady', {
-    clientName: window.clientName,
-    videoId: player.getVideoData().video_id,
-    time: player.getCurrentTime(),
-    title: player.getVideoData().title,
-  });
+  window.socket.emit('clientReady', window.getStatus());
 
 }
 
@@ -43,25 +38,19 @@ function onPlayerStateChange(event) {
   if (event.data == YT.PlayerState.PLAYING) {
 
     console.log("Oh! Seems the seekbar changed!");
-    window.socket.emit('videoSeekChanged', {
-      clientName: window.clientName,
-      time: currentTime,
-      videoId: player.getVideoData().video_id,
-    });
+    window.socket.emit('videoSeekChanged', window.getStatus());
 
     player.playVideo();
     // window.startTime(currentTime);
 
     // setTimeout(stopVideo, 6000);
   } else if (event.data == YT.PlayerState.PAUSED) {
-    window.socket.emit('videoPaused', {
-      clientName: window.clientName,
-      time: currentTime,
-      videoId: player.getVideoData().video_id,
-    });
+    window.socket.emit('videoPaused', window.getStatus());
 
     // window.pauseTime(currentTime);
 
+  } else if (YT.PlayerState.BUFFERING) {
+    window.socket.emit('clientBuffering', window.getStatus());
   }
   window.checkSync();
   // window.updateTime(currentTime);
@@ -78,10 +67,12 @@ function seekVideo() {
 
 }
 
-function loadVideo(id, second = 0, mode = '') {
-  console.log(Math.trunc(player.getCurrentTime()) + " ---- " + Math.trunc(second) )
 
-  if (player.getVideoData().video_id == id && +Math.trunc(second) == +Math.trunc(player.getCurrentTime())) {
+
+function loadVideo(videoId, time = 0, mode = '') {
+  console.log(Math.trunc(player.getCurrentTime()) + " ---- " + Math.trunc(time) )
+
+  if (player.getVideoData().video_id == videoId && +Math.trunc(time) == +Math.trunc(player.getCurrentTime())) {
     if (mode !== "pause") {
       player.playVideo();
       console.log("Totally synced! loadvideo aborted");
@@ -89,14 +80,14 @@ function loadVideo(id, second = 0, mode = '') {
     }
   }
 
-  if (player.getVideoData().video_id === id) {
+  if (player.getVideoData().video_id === videoId) {
     console.log('Just seek to the second of the video');
-    player.seekTo(second, true);
+    player.seekTo(time, true);
   } else {
     player.loadVideoById(
       {
-        'videoId': id,
-        'startSeconds': second
+        'videoId': videoId,
+        'startSeconds': time
       }
     );
   }
@@ -108,4 +99,5 @@ function loadVideo(id, second = 0, mode = '') {
 
 
 }
+
 

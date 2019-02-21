@@ -36,6 +36,15 @@
 
 
 }
+
+.status {
+    color: #9e9402;
+    font-weight: bold;
+}
+
+.currentUser {
+    font-weight: bold;
+}
 .synced{
     color: green;
 }

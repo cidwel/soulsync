@@ -17,6 +17,7 @@
         Video:
         <input id="addLink" name="addLink" type="text"/>
         <button type="button" class="btn btn-primary btn-play" onClick="broadcastVideo()"><i class="fa fa-play"></i></button>
+        <button type="button" class="btn btn-primary btn-play" onClick="queueVideoTest()"><i class="fa fa-plus"></i></button>
         <button type="button" class="btn btn-primary btn-play" onClick="pauseVideo()"><i class="fa fa-pause"></i></button>
         <button type="button" class="btn btn-primary btn-play" onClick="syncVideo()"><i class="fa fa-sync"></i></button>
 
@@ -34,27 +35,30 @@
         <div class="listWrapper">
 
             <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                <label class="btn btn-secondary">
-                    <input type="radio" name="options" id="option1" autocomplete="off" checked> Playlist
-                </label>
                 <label class="btn btn-secondary active">
-                    <input type="radio" name="options" id="option2" autocomplete="off"> History
+                    <input type="radio" onClick={changeTab("serverPlaylist")} name="list" id="serverPlaylist" autocomplete="off" checked> Playlist
+                </label>
+                <label class="btn btn-secondary ">
+                    <input type="radio" onClick={changeTab("serverHistory")}  name="list" id="serverHistory" autocomplete="off"> Server history
+                </label>
+                <label class="btn btn-secondary ">
+                    <input type="radio" onClick={changeTab("localHistory")}  name="list" id="localHistory" autocomplete="off"> Local history
                 </label>
             </div>
 
-
-
-            <!--
-
-            <div class="list listPlaylist">
+            <div class="list serverPlaylist">
                 <ul>
                 </ul>
             </div>
 
-            -->
+
+            <div class="list serverHistory">
+                <ul>
+                </ul>
+            </div>
 
 
-            <div class="list listHistory">
+            <div class="list localHistory">
                 <ul>
                 </ul>
             </div>

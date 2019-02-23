@@ -1,0 +1,11 @@
+{
+  "extends": "airbnb",
+  "rules": {
+    "func-names": ["error", "never"],
+    "no-param-reassign": "off",
+    "no-use-before-define": "off",
+    "max-len": "off",
+    "no-debugger": "off",
+    "no-console": "off",
+  }
+}

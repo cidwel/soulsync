@@ -1,31 +1,31 @@
 // 2. This code loads the IFrame Player API code asynchronously.
-var tag = document.createElement('script');
+const tag = document.createElement('script');
 
-tag.src = "https://www.youtube.com/iframe_api";
-var firstScriptTag = document.getElementsByTagName('script')[0];
+tag.src = 'https://www.youtube.com/iframe_api';
+const firstScriptTag = document.getElementsByTagName('script')[0];
 firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
 
 // 3. This function creates an <iframe> (and YouTube player)
 //    after the API code downloads.
-var player;
+let player;
 function onYouTubeIframeAPIReady() {
   player = new YT.Player('player', {
     videoId: '2m7XrMtOey8',
     events: {
-      'onReady': onPlayerReady,
-      'onStateChange': onPlayerStateChange
-    }
+      onReady: onPlayerReady,
+      onStateChange: onPlayerStateChange,
+    },
   });
 }
 
 
-//4. The API  will call this function when the video player is ready.
-function onPlayerReady (event)  {
+// 4. The API  will call this function when the video player is ready.
+function onPlayerReady(event) {
   console.log("Yay! I'm ready, let's notify master!");
   window.socket.emit('clientReady', window.getStatus());
-  window.syncVideo();
-
+  $('#connectedTotal').text('No one is here!');
+  $('#connectedClients').hide();
 }
 
 
@@ -33,31 +33,58 @@ function onPlayerReady (event)  {
 //    The function indicates that when playing a video (state=1),
 //    the player should play for six seconds and then stop.
 function onPlayerStateChange(event) {
+  triggeredEvents.unshift(event.data);
+  triggeredEvents = triggeredEvents.slice(0, 10);
 
-  let currentTime = player.getCurrentTime();
+  const currentTime = player.getCurrentTime();
 
-  if (event.data == YT.PlayerState.PLAYING) {
+  console.log(ytStatus[event.data]);
 
+  if (triggeredEvents[0] === YT.PlayerState.PLAYING
+    && triggeredEvents[1] === YT.PlayerState.BUFFERING
+    && triggeredEvents[2] === YT.PlayerState.PAUSED) {
+    console.log("SEEKBAR CHANGED??");
+    window.socket.emit('videoSeekChanged', window.getStatus());
+  }
+
+
+  if (event.data === YT.PlayerState.PLAYING) {
+    refreshStatusSpam = false;
     window.addToHistory(window.getStatus());
 
-    console.log("Oh! Seems the seekbar changed!");
-    window.socket.emit('videoSeekChanged', window.getStatus());
+    console.log('The player state changed to PLAYING!');
 
     player.playVideo();
+    debugger;
+    window.socket.emit('clientPlayingVideo', window.getStatus());
     // window.startTime(currentTime);
-
     // setTimeout(stopVideo, 6000);
-  } else if (event.data == YT.PlayerState.PAUSED) {
-    window.socket.emit('videoPaused', window.getStatus());
-
+  } else if (event.data === YT.PlayerState.PAUSED && !refreshStatusSpam) {
+    // window.socket.emit('videoPaused', window.getStatus());
     // window.pauseTime(currentTime);
-
-  } else if (YT.PlayerState.BUFFERING) {
+  } else if (event.data === YT.PlayerState.BUFFERING && !refreshStatusSpam) {
+    refreshStatusSpam = true;
     window.socket.emit('clientBuffering', window.getStatus());
-  }
-  window.checkSync();
-  // window.updateTime(currentTime);
+  } else if (event.data === YT.PlayerState.ENDED) {
 
+
+    window.socket.emit('clientBuffering', window.getStatus());
+
+
+  }
+
+
+  /*
+  if ([YT.PlayerState.PLAYING,
+    YT.PlayerState.BUFFERING,
+    YT.PlayerState.PAUSED].includes(event.data)) {
+    refreshStatusSpam = false;
+  }
+  */
+
+
+  // window.checkSync(); // esto provoca mazo de spam
+  // window.updateTime(currentTime);
 }
 function stopVideo() {
   player.stopVideo();
@@ -65,20 +92,18 @@ function stopVideo() {
 
 
 function seekVideo() {
-  player.seekTo(100, true)
-  console.log("jeje");
-
+  player.seekTo(100, true);
+  console.log('jeje');
 }
 
 
-
 function loadVideo(videoId, time = 0, mode = '') {
-  console.log(Math.trunc(player.getCurrentTime()) + " ---- " + Math.trunc(time) )
+  console.log(`${Math.trunc(player.getCurrentTime())} ---- ${Math.trunc(time)}`);
 
-  if (player.getVideoData().video_id == videoId && +Math.trunc(time) == +Math.trunc(player.getCurrentTime())) {
-    if (mode !== "pause") {
+  if (player.getVideoData().video_id === videoId && +Math.trunc(time) === +Math.trunc(player.getCurrentTime())) {
+    if (mode !== 'pause') {
       player.playVideo();
-      console.log("Totally synced! loadvideo aborted");
+      console.log('Totally synced! loadvideo aborted');
       return;
     }
   }
@@ -86,21 +111,18 @@ function loadVideo(videoId, time = 0, mode = '') {
   if (player.getVideoData().video_id === videoId) {
     console.log('Just seek to the second of the video');
     player.seekTo(time, true);
+    player.playVideo();
   } else {
     player.loadVideoById(
       {
-        'videoId': videoId,
-        'startSeconds': time
-      }
+        videoId,
+        startSeconds: time,
+      },
     );
   }
 
-  if (mode === "pause") {
-    console.log("Let's pause the video")
+  if (mode === 'pause') {
+    console.log("Let's pause the video");
     // player.pauseVideo();
   }
-
-
 }
-
-

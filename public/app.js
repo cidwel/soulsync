@@ -219,7 +219,7 @@ function getVideoUrlData(url) {
 function refreshList(dataList, $dom, reverse = false) {
   const videoHistoryCopy = (reverse) ? dataList.slice(0).reverse() : dataList.slice(0);
   const videoList = videoHistoryCopy.reduce((old, curr) => `${old}
-      <li videoId="${curr.videoId}" onClick={broadcastVideo("${curr.videoId}")}>
+      <li videoId="${curr.videoId}" onClick={broadcastVideo("${curr.videoId}",0)}>
         <div ><img class="thumbnail" src="${curr.thumbnail.default.url}"/></div>
         <div class="thumbTextWrapper">${curr.title}<br><span class="duration">${secondsToClock(curr.duration)}</span></div>
       </li>
@@ -245,7 +245,7 @@ window.getStatus = function () {
 };
 
 
-window.broadcastVideo = function (videoId = null) {
+window.broadcastVideo = function (videoId = null, time) {
   log('sending broadcast to server');
 
   const videoData = (videoId) ? { videoId, time: 0 } : getVideoUrlData();
@@ -253,6 +253,10 @@ window.broadcastVideo = function (videoId = null) {
   if (status && status.videoId === videoData.videoId) {
     // just play at the same second
     videoData.time = status.time;
+  }
+
+  if (typeof time === "number") {
+    videoData.time = time;
   }
   socket.emit('playVideo', videoData);
 };

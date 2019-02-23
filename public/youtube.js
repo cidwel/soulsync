@@ -43,7 +43,7 @@ function onPlayerStateChange(event) {
   if (triggeredEvents[0] === YT.PlayerState.PLAYING
     && triggeredEvents[1] === YT.PlayerState.BUFFERING
     && triggeredEvents[2] === YT.PlayerState.PAUSED) {
-    console.log("SEEKBAR CHANGED??");
+    console.log('SEEKBAR CHANGED??');
     window.socket.emit('videoSeekChanged', window.getStatus());
   }
 
@@ -55,7 +55,6 @@ function onPlayerStateChange(event) {
     console.log('The player state changed to PLAYING!');
 
     player.playVideo();
-    debugger;
     window.socket.emit('clientPlayingVideo', window.getStatus());
     // window.startTime(currentTime);
     // setTimeout(stopVideo, 6000);
@@ -66,11 +65,7 @@ function onPlayerStateChange(event) {
     refreshStatusSpam = true;
     window.socket.emit('clientBuffering', window.getStatus());
   } else if (event.data === YT.PlayerState.ENDED) {
-
-
     window.socket.emit('clientBuffering', window.getStatus());
-
-
   }
 
 
@@ -119,6 +114,11 @@ function loadVideo(videoId, time = 0, mode = '') {
         startSeconds: time,
       },
     );
+    if (typeof time === 'number') {
+      setTimeout(() => {
+        player.seekTo(+time + 1);
+      }, 1*500);
+    }
   }
 
   if (mode === 'pause') {

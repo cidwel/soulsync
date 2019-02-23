@@ -227,3 +227,6 @@ const syncData = () => {
   syncedClients = [];
   io.emit('checkSyncAsk');
 };
+
+
+// Al cambiar de video, sie n el local history se quedó con un time, este no vuelve. Deberia volver a 00.

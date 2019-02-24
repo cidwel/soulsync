@@ -22,6 +22,7 @@ window.clientTimerStatus = timer_pause;
 window.clientTimerSeconds = 0;
 
 window.videoHistory = [];
+window.serverPlaylist = [];
 window.refreshStatusSpam = false;
 
 window.triggeredEvents = [];
@@ -74,6 +75,17 @@ if (!cookieClientName) {
 $('#clientName').text(window.clientName);
 
 socket.on('playVideo', (videoData) => {
+
+  $(".playVideoData").html(`
+    <ul>
+        <li>time: ${Math.trunc(videoData.time)}</li>
+        <li>playOnly: ${videoData.playOnlyFor || ''}</li>
+        <li>playNot: ${videoData.playNotFor || ''}</li>
+        <li>mode: ${videoData.mode || ''}</li>
+    </ul>
+  `);
+
+
   const { playOnlyFor, playNotFor, mode } = videoData;
 
   if (playNotFor && window.clientId === playNotFor) {
@@ -99,6 +111,8 @@ socket.on('playVideo', (videoData) => {
     loadVideo(videoId, time, mode);
     $('#addLink').val(`https://www.youtube.com/watch?v=${videoId}&t=${Math.trunc(time)}`);
   }
+
+
 });
 
 
@@ -108,7 +122,7 @@ function updateClientsData(clientsData) {
   const allSameVideo = clientsData.map(x => x.videoId).every((val, i, arr) => val === arr[0]);
   const allSameTime = clientsData.map(x => x.time).every((val, i, arr) => Math.abs(Math.trunc(val) - Math.trunc(arr[0])) < 2);
 
-  clientsData.sort((a, b) => ((a.clientId > b.clientId) ? 1 : ((b.clientId > a.clientId) ? -1 : 0)));
+  clientsData.sort((a, b) => ((a.clientName > b.clientName) ? 1 : ((b.clientName > a.clientName) ? -1 : 0)));
 
   const clients = clientsData.reduce((old, curr) => {
     const allSameVideoCaption = (!allSameVideo) ? `: ${curr.title}` : '';
@@ -146,11 +160,12 @@ function updateClientsData(clientsData) {
 }
 
 socket.on('getVideoStatus', (requestedData) => {
+  debugger;
   if (window.clientId !== requestedData.clientId) {
     sendVideoStatusToServer({
       ...getStatus(),
       requestedBy: requestedData.clientId,
-    });
+    }, requestedData.goSync);
   }
 });
 
@@ -173,16 +188,17 @@ socket.on('updateClientResults', (data, goSyncVideoClientId) => {
   if (goSyncVideoClientId && data.connectedClients.length > 1 && goSyncVideoClientId === window.clientId) {
     const clientsPlayingVideo = data.connectedClients.filter(client => client.status === YT_STATUS_PLAYING).length;
     if (data.connectedClients.length - 1 === clientsPlayingVideo) {
-      console.log('all clients were playing so... sync video');
+      log('all clients were playing so... sync video');
       window.syncVideo();
     } else {
-      console.log('At least one client is not playing so.. no sync');
+      log('At least one client is not playing so.. no sync');
     }
   }
 });
 
-socket.on('videoQueued', (serverPlaylist) => {
-  refreshList(serverPlaylist, $('.serverPlaylist'));
+socket.on('playlistUpdated', (receivedServerPlaylist) => {
+  serverPlaylist = receivedServerPlaylist;
+  refreshList(receivedServerPlaylist, $('.serverPlaylist'));
 });
 
 socket.on('newClient', (newClient) => {
@@ -191,8 +207,9 @@ socket.on('newClient', (newClient) => {
   }
 });
 
-function sendVideoStatusToServer(videoData) {
-  socket.emit('sendVideoStatusToServer', videoData);
+function sendVideoStatusToServer(videoData, goSync) {
+  debugger;
+  socket.emit('sendVideoStatusToServer', videoData, goSync);
 }
 
 function getVideoUrlData(url) {
@@ -218,12 +235,17 @@ function getVideoUrlData(url) {
 
 function refreshList(dataList, $dom, reverse = false) {
   const videoHistoryCopy = (reverse) ? dataList.slice(0).reverse() : dataList.slice(0);
-  const videoList = videoHistoryCopy.reduce((old, curr) => `${old}
+
+
+
+  const videoList = videoHistoryCopy.reduce((old, curr) => {
+    return `${old}
       <li videoId="${curr.videoId}" onClick={broadcastVideo("${curr.videoId}",0)}>
         <div ><img class="thumbnail" src="${curr.thumbnail.default.url}"/></div>
         <div class="thumbTextWrapper">${curr.title}<br><span class="duration">${secondsToClock(curr.duration)}</span></div>
       </li>
-    `, '');
+    `
+  }, '');
   $dom.html(`<ul>${videoList}</ul>`);
 }
 
@@ -271,9 +293,10 @@ window.queueVideoTest = function () {
 }
 
 window.queueVideo = function (videoData) {
+  const data = videoData || getVideoUrlData();
   log('sending video to queue to server');
-  videoData.requestedBy = window.clientId;
-  socket.emit('queueVideo', videoData);
+  data.requestedBy = window.clientId;
+  socket.emit('queueVideo', data);
 };
 
 window.syncVideo = function () {
@@ -282,6 +305,7 @@ window.syncVideo = function () {
   socket.emit('askRunningVideoData', {
     clientName: window.clientName,
     clientId: window.clientId,
+    goSync: true
   });
 };
 
@@ -340,7 +364,7 @@ function uuidv4() {
 }
 
 
-function log(string) {
+window.log = (string) => {
   console.log(`[${window.clientName}] ${string}`);
 }
 

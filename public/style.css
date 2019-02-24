@@ -112,3 +112,20 @@
 .thumbTextWrapper {
     line-height: 20px;
 }
+
+
+
+.clientDataWrapper, .playVideoData {
+    float: left;
+    width: 500px;
+}
+.playVideoData {
+    border: red thin solid;
+    padding: 4px;
+    font-weight: bold;
+    height: 100%;
+    width: 300px;
+}
+.clearFix {
+    clear: both;
+}

@@ -10,22 +10,14 @@ const app = express();
 
 const publicDir = path.join(__dirname, 'public');
 
-const notifyTimer = 0;
-const notifyTimerLimit = 3;
 const notifyTimerClickSeconds = 10;
 
 
-let connectedClients = [];
-let syncedClients = [];
-let serverPlaylist = [];
+const connectedClients = [];
+const syncedClients = [];
+const serverPlaylist = [];
 const allClientLists = [connectedClients, syncedClients, serverPlaylist];
 
-/*
-setInterval(() => {
-  console.log('Interval, sync data!');
-  syncData();
-}, notifyTimerClickSeconds * 1000);
-*/
 
 app.set('port', process.env.PORT || 3000);
 app.use(bodyParser.json()); // Parses json, multi-part (file), url-encoded
@@ -45,25 +37,45 @@ server.listen(app.get('port'), () => {
 
 
 io.on('connection', (socket) => {
-  const total = io.engine.clientsCount;
+  // let rooms = Object.keys(socket.rooms);
+  // io.emit('roomList', rooms);
+  const room = socket.handshake.headers.referer.split('?')[1];
+  socket.join(room);
 
-  console.log(`Client found! ${total} client(s) online`);
+  const total = io.sockets.adapter.rooms[room].length;
+  console.log(`Clients in ${room}: ${total}`);
+
+
+  // Create lists only if they are needed
+  [connectedClients, syncedClients, serverPlaylist].forEach((list, I) => {
+    if (!list[room]) {
+      console.log(`CLEAN LIST ${I}`);
+      list[room] = [];
+    }
+  });
+
+  setInterval(() => {
+    // console.log('Interval, sync data!');
+    // syncData({ room });
+  }, notifyTimerClickSeconds * 1000);
 
   socket.on('disconnect', () => {
     console.log('Got disconnect!');
-    removeClientInList(socket.id);
-    syncData();
+    const theRoom = removeClientInList(socket.id, room);
+    if (theRoom) {
+      syncData({ room: theRoom });
+    }
   });
 
 
   socket.on('clientReady', (clientData) => {
     addClientInList(clientData);
-    if (io.engine.clientsCount > 1) {
+    if (io.sockets.adapter.rooms[room].length > 1) {
       console.log(`New client found: ${clientData.clientName} ,let's notify others`);
-      io.emit('updateClientResults', { connectedClients, serverPlaylist }, clientData.clientId);
-      io.emit('newClient', clientData);
+      io.to(room).emit('updateClientResults', { connectedClients: connectedClients[room], serverPlaylist: serverPlaylist[room] }, clientData.clientId);
+      io.to(room).emit('newClient', clientData);
     } else {
-      console.log('No one in room so... no more commmunication');
+      console.log('No one in room so... no more commmunication, but I added!');
     }
   });
 
@@ -91,7 +103,7 @@ io.on('connection', (socket) => {
 
   socket.on('askRunningVideoData', (data) => {
     console.log(`"${data.clientName}" wants to force to sync! Let's ask people!`);
-    io.emit('getVideoStatus', data);
+    io.to(room).emit('getVideoStatus', data);
   });
 
   socket.on('videoSeekChanged', (data) => {
@@ -104,73 +116,73 @@ io.on('connection', (socket) => {
     });
   });
 
-  socket.on('checkSync', (clientData) => {
+  socket.on('checkSync', () => {
     console.log('A client asked for sync data!');
-    syncData();
+    syncData({ room });
   });
 
 
   socket.on('checkSyncGet', (clientData) => {
-    console.log(`Get sync data from ${clientData.clientName} (${clientData.clientId}}) - total of: ${io.engine.clientsCount}`);
-    if (!syncedClients.find(x => x.clientId === clientData.clientId)) {
+    console.log(`Get sync data from ${clientData.clientName} (${clientData.clientId}}) - total of: ${io.sockets.adapter.rooms[room].length}`);
+    if (!syncedClients[room].find(x => x.clientId === clientData.clientId)) {
       // fix name!
 
-      clientData.clientName = connectedClients.find(x => x.clientId === clientData.clientId).clientName;
-      syncedClients.push(clientData);
+      clientData.clientName = connectedClients[room].find(x => x.clientId === clientData.clientId).clientName;
+      syncedClients[room].push(clientData);
       console.log('..and pushed the new data');
     }
 
     // if (syncedClients.length === connectedClients.length) {
-    if (syncedClients.length === io.engine.clientsCount) {
+    if (syncedClients[room].length === io.sockets.adapter.rooms[room].length) {
       console.log('All clients sent their data.. we send sync info!');
-      io.emit('updateClientResults', { connectedClients: syncedClients, serverPlaylist });
+      io.to(room).emit('updateClientResults', { connectedClients: syncedClients[room], serverPlaylist: serverPlaylist[room] });
 
-      connectedClients = syncedClients.slice();
+      connectedClients[room] = syncedClients[room].slice();
 
-      syncedClients = []; // clear the poll!
+      syncedClients[room] = []; // clear the poll!
     }
   });
 
 
   socket.on('clientBuffering', (clientData) => {
     // syncData();
-    const foundClient = connectedClients.find(client => client.clientId === clientData.clientId);
+    const foundClient = connectedClients[room].find(client => client.clientId === clientData.clientId);
     console.log(`${clientData.clientName} (${clientData.clientId}) Client is buffering, let's announce everyone!`);
     if (!foundClient) {
       console.error("CLIENTBUFFERING: foundClient not found. Here's the search data");
       console.error(clientData);
       console.error('-----and connected clients');
-      console.error(connectedClients);
+      console.error(connectedClients[room]);
       console.error('-----------------------------------------------');
       console.error('client id should be matching on both!');
     } else {
       foundClient.status = clientData.status;
-      io.emit('updateClientResults', { connectedClients, serverPlaylist });
+      io.to(room).emit('updateClientResults', { connectedClients: connectedClients[room], serverPlaylist: serverPlaylist[room] });
     }
   });
 
   socket.on('clientPlayingVideo', (clientData) => {
     // syncData();
-    const foundClient = connectedClients.find(client => client.clientId === clientData.clientId);
+    const foundClient = connectedClients[room].find(client => client.clientId === clientData.clientId);
     console.log(`${clientData.clientName} (${clientData.clientId}) Client is playing, let's announce everyone!`);
     if (!foundClient) {
       console.error("CLIENTPLAYINGVIDEO: foundClient not found. Here's the search data");
       console.error(clientData);
       console.error('-----and connected clients');
-      console.error(connectedClients);
+      console.error(connectedClients[room]);
       console.error('-----------------------------------------------');
       console.error('client id should be matching on both!');
     } else {
       foundClient.status = clientData.status;
-      io.emit('updateClientResults', { connectedClients, serverPlaylist });
-      syncData();
+      io.to(room).emit('updateClientResults', { connectedClients: connectedClients[room], serverPlaylist: serverPlaylist[room] });
+      syncData({ room });
     }
   });
 
   socket.on('selectedCookieName', (clientData) => {
     console.log(`Client changes name ${clientData.clientName} > ${clientData.clientNewName}`);
     [...allClientLists].forEach((list) => {
-      list.find(client => client.clientId === clientData.clientId).clientName = clientData.clientNewName;
+      list[room].find(client => client.clientId === clientData.clientId).clientName = clientData.clientNewName;
     });
   });
 
@@ -187,13 +199,12 @@ io.on('connection', (socket) => {
   });
   socket.on('videoPausedGlobal', (data) => {
     console.log(`"${data.clientName}" paused the video (global)! Let's pause all!`);
-    io.emit('pauseVideo');
+    io.to(room).emit('pauseVideo');
   });
 
   socket.on('videoContinueGlobal', (data) => {
     console.log(`"${data.clientName}" continued the video! Let's continue in all`);
-    const { videoId, time, clientName } = data;
-    io.emit('continueVideo');
+    io.to(room).emit('continueVideo');
   });
 
   // Video queue
@@ -211,15 +222,15 @@ io.on('connection', (socket) => {
 
 
 const queueVideo = (videoData) => {
-  if (serverPlaylist.length === 0 || serverPlaylist[serverPlaylist.length - 1].videoId !== videoData.videoId) {
+  if (serverPlaylist[videoData.room].length === 0 || serverPlaylist[videoData.room][serverPlaylist[videoData.room].length - 1].videoId !== videoData.videoId) {
     fetchVideoInfo(videoData.videoId).then((videoInfo) => {
       videoData.url = videoInfo.url;
       videoData.title = videoInfo.title;
       videoData.duration = videoInfo.duration;
       videoData.thumbnail = youtubeThumbnail(videoInfo.url);
       console.log(videoData);
-      serverPlaylist.push(videoData);
-      io.emit('playlistUpdated', serverPlaylist);
+      serverPlaylist[videoData.room].push(videoData);
+      io.to(videoData.room).emit('playlistUpdated', serverPlaylist[videoData.room]);
     });
   } else {
     console.log(`The video ${videoData.videoId} was already added`);
@@ -227,15 +238,14 @@ const queueVideo = (videoData) => {
 };
 
 const dequeueVideo = (videoData, position) => {
-  serverPlaylist.splice(position, 1)
+  serverPlaylist[videoData.room].splice(position, 1);
 
-  io.emit('playlistUpdated', serverPlaylist);
-
+  io.to(videoData.room).emit('playlistUpdated', serverPlaylist[videoData.room]);
 };
 
 
 const requestPlayVideo = (attr) => {
-  io.emit('playVideo', attr);
+  io.to(attr.room).emit('playVideo', attr);
 };
 
 const requestPauseVideo = (attr) => {
@@ -247,30 +257,33 @@ const requestPauseVideo = (attr) => {
 
 
 const addClientInList = (clientData) => {
-  if (!connectedClients.find(x => x.clientId === clientData.clientId)) {
-    if (connectedClients.find(client => client.clientName === clientData.clientName)) {
+  if (!connectedClients[clientData.room].find(x => x.clientId === clientData.clientId)) {
+    if (connectedClients[clientData.room].find(client => client.clientName === clientData.clientName)) {
       console.log('Found duplicidad');
-      const sameTotal = connectedClients.filter(client => client.clientOldName === clientData.clientName).length + 2;
+      const sameTotal = connectedClients[clientData.room].filter(client => client.clientOldName === clientData.clientName).length + 2;
       clientData.clientOldName = clientData.clientName;
       clientData.clientName += ` (${sameTotal})`;
     }
-    connectedClients.push(clientData);
+    connectedClients[clientData.room].push(clientData);
   }
 };
 
-const removeClientInList = (socketId) => {
-  const foundClient = connectedClients.find(client => client.socketId === socketId);
+const removeClientInList = (socketId, room) => {
+  const foundClient = connectedClients[room].find(client => client.socketId === socketId);
   if (foundClient) {
     console.log(`Removed ${foundClient.clientName} (${foundClient.clientId}) sockedId: ${foundClient.socketId}}`);
-    connectedClients = connectedClients.filter(client => client.socketId !== socketId);
+    connectedClients[room] = connectedClients[room].filter(client => client.socketId !== socketId);
   } else {
     console.log(`Client with that socked ID doesn't exist: ${socketId}`);
   }
+
+  return room;
 };
 
-const syncData = () => {
-  syncedClients = [];
-  io.emit('checkSyncAsk');
+const syncData = (data) => {
+  console.log(data);
+  syncedClients[data.room] = [];
+  io.to(data.room).emit('checkSyncAsk');
 };
 
 

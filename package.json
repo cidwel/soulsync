@@ -5,6 +5,7 @@
     "build": "browserify public/app.js -o public/bundle.js -d",
     "start": "node server.js",
     "start2": "watchify public/app.js --standalone bundle -o public/bundle.js -v | nodemon server.js localhost 8080",
+    "start2debug": "watchify public/app.js --standalone bundle -o public/bundle.js -v | nodemon --inspect server.js localhost 8080",
     "super": "supervisor -q -e 'js|html|css' server.js"
   },
   "dependencies": {

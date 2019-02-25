@@ -71,7 +71,6 @@ function onPlayerStateChange(event) {
   } else if (event.data === YT.PlayerState.ENDED) {
     // window.socket.emit('clientBuffering', window.getStatus());
 
-    debugger;
     // If the video playing is the same as the first one in the queue...
     if (window.serverPlaylist.length && window.serverPlaylist[0].videoId === window.getStatus().videoId) {
       window.socket.emit('dequeueVideo', window.getStatus(), 0);
@@ -92,15 +91,6 @@ function onPlayerStateChange(event) {
 
   // window.checkSync(); // esto provoca mazo de spam
   // window.updateTime(currentTime);
-}
-function stopVideo() {
-  player.stopVideo();
-}
-
-
-function seekVideo() {
-  player.seekTo(100, true);
-  log('jeje');
 }
 
 
@@ -127,10 +117,7 @@ function loadVideo(videoId, time = 0, mode = '') {
       },
     );
     if (typeof time === 'number') {
-      setTimeout(() => {
-        // player.seekTo(+time + 1);
-      }, 1*500);
-      player.seekTo(+time);
+      player.seekTo(+time+1);
     }
   }
 

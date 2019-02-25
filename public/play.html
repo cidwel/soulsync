@@ -1,0 +1,96 @@
+<!doctype html>
+<html>
+<head>
+    <title>SoulSync</title>
+    <link rel="stylesheet" href="reset.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+
+
+</head>
+<body>
+
+
+<div class="app">
+    <div id="controls">
+        Video:
+        <input id="addLink" name="addLink" type="text"/>
+        <button type="button" class="btn btn-primary btn-play" onClick="broadcastVideo()"><i class="fa fa-play"></i></button>
+        <button type="button" class="btn btn-primary btn-play" onClick="queueVideo()"><i class="fa fa-plus"></i></button>
+        <button type="button" class="btn btn-primary btn-play" onClick="queueVideoTest()"><i class="fa fa-bone"></i></button>
+        <button type="button" class="btn btn-primary btn-play" onClick="pauseVideo()"><i class="fa fa-pause"></i></button>
+        <button type="button" class="btn btn-primary btn-play" onClick="syncVideo()"><i class="fa fa-sync"></i></button>
+    </div>
+
+
+    <div class="scene">
+
+        <div id="player" class="videoWrapper">
+        </div>
+
+
+        <div class="listWrapper">
+            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                <label class="btn btn-secondary active">
+                    <input type="radio" onClick={changeTab("serverPlaylist")} name="list" id="serverPlaylist" autocomplete="off" checked> Playlist
+                </label>
+                <!--
+                <label class="btn btn-secondary ">
+                    <input type="radio" onClick={changeTab("serverHistory")}  name="list" id="serverHistory" autocomplete="off"> Server history
+                </label>
+                -->
+                <label class="btn btn-secondary ">
+                    <input type="radio" onClick={changeTab("localHistory")}  name="list" id="localHistory" autocomplete="off"> History
+                </label>
+            </div>
+
+            <div class="list serverPlaylist">
+                <ul>
+                </ul>
+            </div>
+
+
+            <div class="list serverHistory">
+                <ul>
+                </ul>
+            </div>
+
+
+            <div class="list localHistory">
+                <ul>
+                </ul>
+            </div>
+
+
+
+
+        </div>
+
+    </div>
+
+    <div>
+        <div class="clientDataWrapper">
+            <div class="clientNameWrapper">You are: <span id="clientName">-----</span></div>
+            <span id="connectedTotal"></span>
+            <div id="connectedClients"></div>
+            <div id="syncMeter"></div>
+        </div>
+        <div style="display: none;" class="playVideoData"></div>
+        <div class="clearFix"></div>
+    </div>
+
+
+</div>
+<script src="/socket.io/socket.io.js"></script>
+<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+<script src="bundle.js"></script>
+<script src="youtube.js"></script>
+
+<script>
+
+
+</script>
+
+</body>
+</html>

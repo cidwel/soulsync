@@ -11107,7 +11107,10 @@ window.socket = io();
 const cookieClientName = Cookies.get('clientName');
 window.clientName = cookieClientName || generateRandomAnimalName();
 window.clientId = uuidv4();
+window.room = window.location.search.split('?')[1];
 
+const urlParams = new URLSearchParams(window.location.search);
+const myParam = urlParams.get('myParam');
 
 timer_pause = 0;
 timer_playing = 1;
@@ -11245,7 +11248,7 @@ function updateClientsData(clientsData) {
     }
 
     $('#connectedClients').show();
-    $('#connectedTotal').html(`Connected users (${clientsData.length}):<br>`);
+    $('#connectedTotal').html(`Room: ${window.room} - Connected users (${clientsData.length}):<br>`);
     $('#connectedClients').html(`<ul>${clients}</ul>`);
   } else {
     $('.clientNameWrapper').show();
@@ -11255,7 +11258,6 @@ function updateClientsData(clientsData) {
 }
 
 socket.on('getVideoStatus', (requestedData) => {
-  debugger;
   if (window.clientId !== requestedData.clientId) {
     sendVideoStatusToServer({
       ...getStatus(),
@@ -11277,6 +11279,7 @@ socket.on('checkSyncAsk', () => {
 });
 
 socket.on('updateClientResults', (data, goSyncVideoClientId) => {
+  debugger;
   updateClientsData(data.connectedClients);
   refreshList(data.serverPlaylist, $('.serverPlaylist'));
 
@@ -11303,7 +11306,6 @@ socket.on('newClient', (newClient) => {
 });
 
 function sendVideoStatusToServer(videoData, goSync) {
-  debugger;
   socket.emit('sendVideoStatusToServer', videoData, goSync);
 }
 
@@ -11358,6 +11360,7 @@ window.getStatus = function () {
     thumbnail: youtubeThumbnail(videoUrl),
     duration: player.getDuration(),
     socketId: window.socket.id,
+    room: window.room,
   };
 };
 

@@ -11173,8 +11173,7 @@ if (!cookieClientName) {
 $('#clientName').text(window.clientName);
 
 socket.on('playVideo', (videoData) => {
-
-  $(".playVideoData").html(`
+  $('.playVideoData').html(`
     <ul>
         <li>time: ${Math.trunc(videoData.time)}</li>
         <li>playOnly: ${videoData.playOnlyFor || ''}</li>
@@ -11209,8 +11208,6 @@ socket.on('playVideo', (videoData) => {
     loadVideo(videoId, time, mode);
     $('#addLink').val(`https://www.youtube.com/watch?v=${videoId}&t=${Math.trunc(time)}`);
   }
-
-
 });
 
 
@@ -11244,7 +11241,7 @@ function updateClientsData(clientsData) {
     if (allSameVideo && allSameTime) {
       $('#syncMeter').html('<span class="synced">Synced</span>');
     } else {
-      $('#syncMeter').html('<span class="unsynced">Not synced</span>');
+      $('#syncMeter').html('<span class="unsynced">Not synced <button class="btn btn-small" onClick="syncVideo()">Sync now</button></span>');
     }
 
     $('#connectedClients').show();
@@ -11283,11 +11280,17 @@ socket.on('updateClientResults', (data, goSyncVideoClientId) => {
   updateClientsData(data.connectedClients);
   refreshList(data.serverPlaylist, $('.serverPlaylist'));
 
+
   if (goSyncVideoClientId && data.connectedClients.length > 1 && goSyncVideoClientId === window.clientId) {
-    const clientsPlayingVideo = data.connectedClients.filter(client => client.status === YT_STATUS_PLAYING).length;
-    if (data.connectedClients.length - 1 === clientsPlayingVideo) {
+    const allWerePlaying = data.connectedClients.filter(x => x.status === YT_STATUS_PLAYING).length === data.connectedClients.length - 1;
+    const clientsWerePlayingSameVideo = data.connectedClients.filter(x => x.clientId !== window.clientId).map(x => x.videoId).length === data.connectedClients.length - 1;
+
+    if (allWerePlaying && clientsWerePlayingSameVideo) {
+      const videoIdWatching = data.connectedClients.filter(x => x.clientId !== window.clientId).map(x => x.videoId)[0];
+      const maxTime = Math.max(...data.connectedClients.filter(x => x.clientId !== window.clientId).map(x => x.time));
+      window.loadVideo(videoIdWatching, maxTime);
       log('all clients were playing so... sync video');
-      window.syncVideo();
+      // window.syncVideo();
     } else {
       log('At least one client is not playing so.. no sync');
     }
@@ -11334,15 +11337,12 @@ function refreshList(dataList, $dom, reverse = false) {
   const videoHistoryCopy = (reverse) ? dataList.slice(0).reverse() : dataList.slice(0);
 
 
-
-  const videoList = videoHistoryCopy.reduce((old, curr) => {
-    return `${old}
+  const videoList = videoHistoryCopy.reduce((old, curr) => `${old}
       <li videoId="${curr.videoId}" onClick={broadcastVideo("${curr.videoId}",0)}>
         <div ><img class="thumbnail" src="${curr.thumbnail.default.url}"/></div>
         <div class="thumbTextWrapper">${curr.title}<br><span class="duration">${secondsToClock(curr.duration)}</span></div>
       </li>
-    `
-  }, '');
+    `, '');
   $dom.html(`<ul>${videoList}</ul>`);
 }
 
@@ -11375,20 +11375,18 @@ window.broadcastVideo = function (videoId = null, time) {
     videoData.time = status.time;
   }
 
-  if (typeof time === "number") {
+  if (typeof time === 'number') {
     videoData.time = time;
   }
-  socket.emit('playVideo', videoData);
+  socket.emit('playVideo', { ...status, ...videoData });
 };
 
 window.queueVideoTest = function () {
-
   queueVideo(getVideoUrlData('https://youtu.be/h8xbjpArhuw'));
   queueVideo(getVideoUrlData('https://www.youtube.com/watch?v=hWIQe9MAa9g'));
   queueVideo(getVideoUrlData('https://youtu.be/NspYa8GcPCs'));
   queueVideo(getVideoUrlData('https://youtu.be/by1QWQprONg'));
-
-}
+};
 
 window.queueVideo = function (videoData) {
   const data = videoData || getVideoUrlData();
@@ -11403,7 +11401,7 @@ window.syncVideo = function () {
   socket.emit('askRunningVideoData', {
     clientName: window.clientName,
     clientId: window.clientId,
-    goSync: true
+    goSync: true,
   });
 };
 
@@ -11464,7 +11462,7 @@ function uuidv4() {
 
 window.log = (string) => {
   console.log(`[${window.clientName}] ${string}`);
-}
+};
 
 
 /*
@@ -11501,19 +11499,18 @@ setInterval(function(){
 */
 
 
-window.changeTab = function(list) {
-  $(".serverPlaylist").hide();
-  $(".serverHistory").hide();
-  $(".localHistory").hide();
+window.changeTab = function (list) {
+  $('.serverPlaylist').hide();
+  $('.serverHistory').hide();
+  $('.localHistory').hide();
 
-  $("#serverPlaylist").parent().removeClass('active');
-  $("#serverHistory").parent().removeClass('active');
-  $("#localHistory").parent().removeClass('active');
+  $('#serverPlaylist').parent().removeClass('active');
+  $('#serverHistory').parent().removeClass('active');
+  $('#localHistory').parent().removeClass('active');
 
   $(`.${list}`).show();
   $(`#${list}`).parent().addClass('active');
-
-}
+};
 
 },{"get-youtube-id":1,"js-cookie":2,"random-animal-name-generator":5,"youtube-thumbnail":6}]},{},[8])(8)
 });

@@ -72,11 +72,11 @@ io.on('connection', (socket) => {
     addClientInList(clientData);
     if (io.sockets.adapter.rooms[room].length > 1) {
       console.log(`New client found: ${clientData.clientName} ,let's notify others`);
-      io.to(room).emit('updateClientResults', { connectedClients: connectedClients[room], serverPlaylist: serverPlaylist[room] }, clientData.clientId);
       io.to(room).emit('newClient', clientData);
     } else {
       console.log('No one in room so... no more commmunication, but I added!');
     }
+    io.to(room).emit('updateClientResults', { connectedClients: connectedClients[room], serverPlaylist: serverPlaylist[room] }, clientData.clientId);
   });
 
 
@@ -113,6 +113,7 @@ io.on('connection', (socket) => {
       videoId,
       time,
       playNotFor: clientId,
+      room: data.room
     });
   });
 
@@ -124,21 +125,28 @@ io.on('connection', (socket) => {
 
   socket.on('checkSyncGet', (clientData) => {
     console.log(`Get sync data from ${clientData.clientName} (${clientData.clientId}}) - total of: ${io.sockets.adapter.rooms[room].length}`);
+
+    const foundClient = connectedClients[room].find(x => x.clientId === clientData.clientId);
+
+    if (foundClient) {
+    }
+
     if (!syncedClients[room].find(x => x.clientId === clientData.clientId)) {
       // fix name!
 
-      clientData.clientName = connectedClients[room].find(x => x.clientId === clientData.clientId).clientName;
-      syncedClients[room].push(clientData);
-      console.log('..and pushed the new data');
+      if (foundClient) {
+        clientData.clientName = foundClient.clientName;
+        syncedClients[room].push(clientData);
+        console.log('..and pushed the new data');
+      }
+
     }
 
     // if (syncedClients.length === connectedClients.length) {
     if (syncedClients[room].length === io.sockets.adapter.rooms[room].length) {
       console.log('All clients sent their data.. we send sync info!');
       io.to(room).emit('updateClientResults', { connectedClients: syncedClients[room], serverPlaylist: serverPlaylist[room] });
-
       connectedClients[room] = syncedClients[room].slice();
-
       syncedClients[room] = []; // clear the poll!
     }
   });

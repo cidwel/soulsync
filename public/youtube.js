@@ -113,11 +113,14 @@ function loadVideo(videoId, time = 0, mode = '') {
     player.loadVideoById(
       {
         videoId,
-        startSeconds: time,
+        startSeconds: Math.trunc(time),
       },
     );
     if (typeof time === 'number') {
-      player.seekTo(+time+1);
+      setTimeout(() => {
+        // player.seekTo(+time + 2);
+        window.syncVideo();
+      }, 1*1000);
     }
   }
 

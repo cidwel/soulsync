@@ -1,0 +1,1 @@
+// Type 2: Persistent datastore with manual loadingconst Datastore = require('nedb-promises');const db = Datastore.create({ filename: 'server/db/data.db', autoload: true });db.load();module.exports = db;

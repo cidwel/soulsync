@@ -51,7 +51,6 @@ function onPlayerStateChange(event) {
   }
 
   if (event.data === YT.PlayerState.PLAYING) {
-
     refreshStatusSpam = false;
     window.addToHistory(window.getStatus());
 
@@ -73,8 +72,7 @@ function onPlayerStateChange(event) {
 
     // If the video playing is the same as the first one in the queue...
     if (window.serverPlaylist.length && window.serverPlaylist[0].videoId === window.getStatus().videoId) {
-      window.socket.emit('dequeueVideo', window.getStatus(), 0);
-
+      window.socket.emit('dequeueVideo', window.getStatus(), 0, true);
     }
     // window.getStatus().videoId ==
   }
@@ -120,7 +118,7 @@ function loadVideo(videoId, time = 0, mode = '') {
       setTimeout(() => {
         // player.seekTo(+time + 2);
         window.syncVideo();
-      }, 1*1000);
+      }, 1 * 1000);
     }
   }
 
@@ -129,5 +127,3 @@ function loadVideo(videoId, time = 0, mode = '') {
     // player.pauseVideo();
   }
 }
-
-

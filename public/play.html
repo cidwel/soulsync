@@ -4,6 +4,7 @@
     <title>SoulSync</title>
     <link rel="stylesheet" href="reset.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
 
@@ -43,6 +44,11 @@
                 <label class="btn btn-secondary ">
                     <input type="radio" onClick={changeTab("localHistory")}  name="list" id="localHistory" autocomplete="off"> History
                 </label>
+
+                <label class="btn btn-secondary ">
+                    <input type="radio" onClick={changeTab("favList")} name="list" id="favList" autocomplete="off"> Favs
+                </label>
+
             </div>
 
             <div class="list serverPlaylist">
@@ -60,6 +66,17 @@
             <div class="list localHistory">
                 <ul>
                 </ul>
+            </div>
+
+            <div class="list favList">
+                <div class="favSwitcher">
+                    Show all
+                    <input onChange="window.changeFavVisibility()" type="checkbox" data-toggle="toggle">
+                </div>
+                <div class="favs">
+
+                </div>
+
             </div>
 
 
@@ -84,6 +101,7 @@
 </div>
 <script src="/socket.io/socket.io.js"></script>
 <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
 <script src="bundle.js"></script>
 <script src="youtube.js"></script>
 

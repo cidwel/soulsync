@@ -109,7 +109,18 @@
     color: #a0a0a0;
 }
 
+.videoCommands {
+    display: inline-block;
+    float: right;
+}
+.videoCommands i {
+    display: inline-block;
+    margin-left: 5px;
+    vertical-align: middle;
+}
+
 .thumbTextWrapper {
+    width: 100%;
     line-height: 20px;
 }
 
@@ -136,3 +147,34 @@
     padding: 40px;
     border-radius: 6px;
     display: inline-block;}
+
+
+.favSwitcher {
+    color: white;
+    display: inline-block;
+    font-weight: bold;
+    padding-left: 12px;
+    padding-top: 10px;
+}
+.favSwitcher .btn-primary {
+    border-radius :20px;
+    font-size: 13px;
+    font-weight: bold;
+    line-height: 5px;
+}
+.favSwitcher .btn-default{
+    border-radius: 20px;
+    background-color: #b7b7b7;
+    font-size: 13px;
+    font-weight: bold;
+    line-height: 5px;
+}
+
+.favSwitcher .toggle.btn {
+    min-height:20px;
+    height:20px;
+}
+
+.favSwitcher .toggle-handle {
+    background-color: white;
+}

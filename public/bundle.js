@@ -11093,6 +11093,8 @@ module.exports = function(url){
 }));
 
 },{}],8:[function(require,module,exports){
+/* global window, Audio */
+
 const getYoutubeId = require('get-youtube-id');
 
 const generateRandomAnimalName = require('random-animal-name-generator');
@@ -11105,8 +11107,9 @@ chime.volume = 0.02;
 
 window.socket = io();
 const cookieClientName = Cookies.get('clientName');
+const cookieClientId = Cookies.get('clientId');
 window.clientName = cookieClientName || generateRandomAnimalName();
-window.clientId = uuidv4();
+window.clientId = cookieClientId || Cookies.set('clientId',uuidv4())
 window.room = window.location.search.split('?')[1];
 
 const urlParams = new URLSearchParams(window.location.search);
@@ -11121,8 +11124,9 @@ window.clientTimerSeconds = 0;
 
 window.videoHistory = [];
 window.serverPlaylist = [];
+window.favedData = [];
 window.refreshStatusSpam = false;
-
+window.showAllFavs = false;
 window.triggeredEvents = [];
 
 
@@ -11276,9 +11280,13 @@ socket.on('checkSyncAsk', () => {
 });
 
 socket.on('updateClientResults', (data, goSyncVideoClientId) => {
-  debugger;
   updateClientsData(data.connectedClients);
+  if (data && data.favedData) {
+    window.favedData = data.favedData;
+    window.refillFavedData(data.serverPlaylist);
+  }
   refreshList(data.serverPlaylist, $('.serverPlaylist'));
+  refreshList(window.favedData, $('.favs'));
 
 
   if (goSyncVideoClientId && data.connectedClients.length > 1 && goSyncVideoClientId === window.clientId) {
@@ -11297,9 +11305,14 @@ socket.on('updateClientResults', (data, goSyncVideoClientId) => {
   }
 });
 
-socket.on('playlistUpdated', (receivedServerPlaylist) => {
-  serverPlaylist = receivedServerPlaylist;
+socket.on('playlistUpdated', (receivedServerPlaylist, favedData) => {
+  console.log("playlist updated!");
+  debugger;
+  window.favedData = favedData; // update it
+  window.refillFavedData(receivedServerPlaylist);
+  window.serverPlaylist = receivedServerPlaylist;
   refreshList(receivedServerPlaylist, $('.serverPlaylist'));
+  refreshList(favedData, $('.favs'));
 });
 
 socket.on('newClient', (newClient) => {
@@ -11333,18 +11346,48 @@ function getVideoUrlData(url) {
   };
 }
 
+
+
+
 function refreshList(dataList, $dom, reverse = false) {
   const videoHistoryCopy = (reverse) ? dataList.slice(0).reverse() : dataList.slice(0);
 
 
-  const videoList = videoHistoryCopy.reduce((old, curr) => `${old}
+  const videoList = videoHistoryCopy.reduce((old, curr, index) => {
+
+    debugger;
+    if ($dom.selector === ".favs" && !window.showAllFavs && !curr.favedBy.includes(window.clientId)) {
+      return old;
+    }
+
+    const favedVideo = window.favedData.find(x => x.videoId === curr.videoId);
+    const favedByUser = favedVideo && favedVideo.favedBy && favedVideo.favedBy.find(x => x === window.clientId);
+    const favedByUserText = (favedByUser) ? 'fas' : 'far';
+
+    const dequeueVideoEl = ($dom.selector === ".serverPlaylist") ? `<i onClick="event.stopPropagation(); window.dequeueVideoByIndex(${index})" class="fa fa-times"/>` : '';
+
+
+
+
+
+    const base64title = btoa(curr.title);
+    return `${old}
       <li videoId="${curr.videoId}" onClick={broadcastVideo("${curr.videoId}",0)}>
         <div ><img class="thumbnail" src="${curr.thumbnail.default.url}"/></div>
-        <div class="thumbTextWrapper">${curr.title}<br><span class="duration">${secondsToClock(curr.duration)}</span></div>
+        <div class="thumbTextWrapper">
+            ${curr.title}<br><span class="duration">${secondsToClock(curr.duration)}</span>
+            <span class="videoCommands"><i onClick="event.stopPropagation(); window.handleFavVideo('${curr.videoId}', '${curr.url}', '${base64title}', ${curr.duration})" class="${favedByUserText} fa-star"/>${dequeueVideoEl}</span>
+        </div>
       </li>
-    `, '');
+    `;
+  }, '');
   $dom.html(`<ul>${videoList}</ul>`);
 }
+
+window.playNextVideo = () => {
+  socket.emit('playVideo', { ...status, ...window.serverPlaylist[0] });
+};
+
 
 window.getStatus = function () {
   const videoData = player && player.getVideoData();
@@ -11363,6 +11406,22 @@ window.getStatus = function () {
     room: window.room,
   };
 };
+
+window.refillFavedData = (videoList) => {
+  window.favedData.forEach(favedVideo => {
+    const foundVideo = videoList.find(x => x.videoId === favedVideo.videoId);
+    if (foundVideo) {
+      debugger;
+      favedVideo.thumbnail = foundVideo.thumbnail;
+      favedVideo.title = foundVideo.title;
+      favedVideo.duration = foundVideo.duration;
+      favedVideo.url = foundVideo.url;
+    } else {
+      favedVideo.thumbnail = youtubeThumbnail(favedVideo.url)
+    }
+  });
+
+}
 
 
 window.broadcastVideo = function (videoId = null, time) {
@@ -11394,6 +11453,16 @@ window.queueVideo = function (videoData) {
   data.requestedBy = window.clientId;
   socket.emit('queueVideo', data);
 };
+
+window.dequeueVideoByIndex = (index) => {
+  debugger;
+  const videoData = window.serverPlaylist[index];
+  videoData.clientId = window.clientId;
+  videoData.clientName = window.clientName;
+  window.socket.emit('dequeueVideo', videoData, index);
+
+
+}
 
 window.syncVideo = function () {
   log("Let's ask server for the updated time!");
@@ -11464,6 +11533,21 @@ window.log = (string) => {
   console.log(`[${window.clientName}] ${string}`);
 };
 
+window.handleFavVideo = (videoId, url, b64title, duration) => {
+
+  const title = atob(b64title);
+
+  const videoData = {
+    videoId,
+    room: window.room,
+    clientId: window.clientId,
+    url,
+    title,
+    duration,
+  }
+  socket.emit('toggleFavVideo', videoData);
+};
+
 
 /*
 
@@ -11503,14 +11587,24 @@ window.changeTab = function (list) {
   $('.serverPlaylist').hide();
   $('.serverHistory').hide();
   $('.localHistory').hide();
+  $('.favList').hide();
 
   $('#serverPlaylist').parent().removeClass('active');
   $('#serverHistory').parent().removeClass('active');
   $('#localHistory').parent().removeClass('active');
+  $('#favList').parent().removeClass('active');
 
   $(`.${list}`).show();
   $(`#${list}`).parent().addClass('active');
 };
 
+
+
+window.changeFavVisibility = () => {
+  debugger;
+  window.showAllFavs = !window.showAllFavs;
+  refreshList(window.favedData, $('.favs'));
+
+}
 },{"get-youtube-id":1,"js-cookie":2,"random-animal-name-generator":5,"youtube-thumbnail":6}]},{},[8])(8)
 });

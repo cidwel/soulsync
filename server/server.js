@@ -1,3 +1,4 @@
+
 const express = require('express');
 const http = require('http');
 const path = require('path');
@@ -21,7 +22,8 @@ const allClientLists = [connectedClients, syncedClients, serverPlaylist];
 
 app.set('port', process.env.PORT || 3000);
 app.use(bodyParser.json()); // Parses json, multi-part (file), url-encoded
-app.use(express.static(`${__dirname}/public`));
+console.log(__dirname);
+app.use(express.static(`${__dirname}/../public`));
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(publicDir, 'index.html'));
@@ -29,6 +31,7 @@ app.get('/', (req, res) => {
 
 const server = http.createServer(app);
 const io = require('socket.io')(server);
+const db = require('./database');
 
 
 server.listen(app.get('port'), () => {
@@ -76,7 +79,13 @@ io.on('connection', (socket) => {
     } else {
       console.log('No one in room so... no more commmunication, but I added!');
     }
-    io.to(room).emit('updateClientResults', { connectedClients: connectedClients[room], serverPlaylist: serverPlaylist[room] }, clientData.clientId);
+
+    getRoomFavedVideos(room)
+      .then((res) => {
+        io.to(room).emit('updateClientResults', { connectedClients: connectedClients[room], serverPlaylist: serverPlaylist[room], favedData: res }, clientData.clientId);
+      })
+      .catch((res) => {});
+
   });
 
 
@@ -113,13 +122,76 @@ io.on('connection', (socket) => {
       videoId,
       time,
       playNotFor: clientId,
-      room: data.room
+      room: data.room,
     });
   });
 
   socket.on('checkSync', () => {
     console.log('A client asked for sync data!');
     syncData({ room });
+  });
+
+
+  socket.on('toggleFavVideo', (videoData) => {
+    debugger;
+    console.log('A client asked to fav a video!');
+
+    // 1. first check if the video was faved by anyone
+    db.findOne({ videoId: videoData.videoId, room: videoData.room })
+      .then((res) => {
+        debugger;
+        if (res) {
+          // check if the video was faved by the current User
+          debugger;
+          const videoFavedByUser = res.favedBy.find(x => x === videoData.clientId);
+          let newArray = [];
+          if (videoFavedByUser) {
+            // if the video was faved, then remove it of the stack
+
+            const indexToRemove = res.favedBy.indexOf(videoData.clientId);
+            if (indexToRemove !== -1) {
+              res.favedBy.splice(indexToRemove, 1);
+            }
+            newArray = res.favedBy;
+          } else {
+            // if it was not faved, then add it
+            res.favedBy.push(videoData.clientId);
+            newArray = res.favedBy;
+          }
+
+          db.update(
+            { videoId: videoData.videoId, room: videoData.room },
+            { $set: { favedBy: newArray } },
+            {},
+          )
+            .then((res) => {
+              emitUpdatePlaylist(videoData.room);
+              debugger;
+            })
+            .catch((err) => {
+              debugger;
+            });
+        } else {
+          // not found so we create it!
+
+          const video = {
+            videoId: videoData.videoId,
+            favedBy: [videoData.clientId],
+            room: videoData.room,
+            url: videoData.url,
+            title: videoData.title,
+            duration: videoData.duration,
+          };
+          db.insert(video)
+            .then((res) => {
+              emitUpdatePlaylist(videoData.room);
+            })
+            .catch((err) => {});
+        }
+      })
+      .catch((err) => {
+        debugger;
+      });
   });
 
 
@@ -139,15 +211,21 @@ io.on('connection', (socket) => {
         syncedClients[room].push(clientData);
         console.log('..and pushed the new data');
       }
-
     }
 
     // if (syncedClients.length === connectedClients.length) {
     if (syncedClients[room].length === io.sockets.adapter.rooms[room].length) {
       console.log('All clients sent their data.. we send sync info!');
-      io.to(room).emit('updateClientResults', { connectedClients: syncedClients[room], serverPlaylist: serverPlaylist[room] });
-      connectedClients[room] = syncedClients[room].slice();
-      syncedClients[room] = []; // clear the poll!
+
+
+
+      getRoomFavedVideos(room)
+        .then((res) => {
+          io.to(room).emit('updateClientResults', { connectedClients: syncedClients[room], serverPlaylist: serverPlaylist[room], favedData: res  });
+          connectedClients[room] = syncedClients[room].slice();
+          syncedClients[room] = []; // clear the poll!
+        })
+        .catch((res) => {});
     }
   });
 
@@ -165,7 +243,13 @@ io.on('connection', (socket) => {
       console.error('client id should be matching on both!');
     } else {
       foundClient.status = clientData.status;
-      io.to(room).emit('updateClientResults', { connectedClients: connectedClients[room], serverPlaylist: serverPlaylist[room] });
+
+      getRoomFavedVideos(room)
+        .then((res) => {
+          io.to(room).emit('updateClientResults', { connectedClients: connectedClients[room], serverPlaylist: serverPlaylist[room], favedData: res  });
+        })
+        .catch((res) => {});
+
     }
   });
 
@@ -182,8 +266,15 @@ io.on('connection', (socket) => {
       console.error('client id should be matching on both!');
     } else {
       foundClient.status = clientData.status;
-      io.to(room).emit('updateClientResults', { connectedClients: connectedClients[room], serverPlaylist: serverPlaylist[room] });
-      syncData({ room });
+
+      getRoomFavedVideos(room)
+        .then((res) => {
+          io.to(room).emit('updateClientResults', { connectedClients: connectedClients[room], serverPlaylist: serverPlaylist[room], favedData: res  });
+          syncData({ room });
+
+        })
+        .catch((res) => {});
+
     }
   });
 
@@ -222,11 +313,25 @@ io.on('connection', (socket) => {
     queueVideo(videoData);
   });
 
-  socket.on('dequeueVideo', (videoData) => {
+  socket.on('dequeueVideo', (videoData, position, playNext) => {
     console.log(`"${videoData.clientName}" wants to dequeue a video`);
-    dequeueVideo(videoData);
+    dequeueVideo(videoData, position);
+    console.log('serverPlaylist', serverPlaylist[videoData.room].length);
+    if (playNext && serverPlaylist[videoData.room].length > 0) {
+      console.log('Play next video');
+      console.log(serverPlaylist[videoData.room][0]);
+      io.to(videoData.room).emit('playVideo', serverPlaylist[videoData.room][0]);
+    }
   });
 });
+
+const emitUpdatePlaylist = (room) => {
+  getRoomFavedVideos(room)
+    .then((res) => {
+      io.to(room).emit('playlistUpdated', serverPlaylist[room], res);
+    })
+    .catch((res) => {});
+};
 
 
 const queueVideo = (videoData) => {
@@ -238,7 +343,8 @@ const queueVideo = (videoData) => {
       videoData.thumbnail = youtubeThumbnail(videoInfo.url);
       console.log(videoData);
       serverPlaylist[videoData.room].push(videoData);
-      io.to(videoData.room).emit('playlistUpdated', serverPlaylist[videoData.room]);
+
+      emitUpdatePlaylist(videoData.room);
     });
   } else {
     console.log(`The video ${videoData.videoId} was already added`);
@@ -247,8 +353,7 @@ const queueVideo = (videoData) => {
 
 const dequeueVideo = (videoData, position) => {
   serverPlaylist[videoData.room].splice(position, 1);
-
-  io.to(videoData.room).emit('playlistUpdated', serverPlaylist[videoData.room]);
+  emitUpdatePlaylist(videoData.room);
 };
 
 
@@ -295,4 +400,14 @@ const syncData = (data) => {
 };
 
 
+const getRoomFavedVideos = room => db.find({ room });
+
+
 // Al cambiar de video, sie n el local history se quedó con un time, este no vuelve. Deberia volver a 00.
+/*
+
+db.insert({ casa: true }, (err, newDoc) => {
+  console.log(newDoc);
+});
+
+ */

@@ -133,16 +133,13 @@ io.on('connection', (socket) => {
 
 
   socket.on('toggleFavVideo', (videoData) => {
-    debugger;
     console.log('A client asked to fav a video!');
 
     // 1. first check if the video was faved by anyone
     db.findOne({ videoId: videoData.videoId, room: videoData.room })
       .then((res) => {
-        debugger;
         if (res) {
           // check if the video was faved by the current User
-          debugger;
           const videoFavedByUser = res.favedBy.find(x => x === videoData.clientId);
           let newArray = [];
           if (videoFavedByUser) {
@@ -166,10 +163,8 @@ io.on('connection', (socket) => {
           )
             .then((res) => {
               emitUpdatePlaylist(videoData.room);
-              debugger;
             })
             .catch((err) => {
-              debugger;
             });
         } else {
           // not found so we create it!
@@ -190,7 +185,6 @@ io.on('connection', (socket) => {
         }
       })
       .catch((err) => {
-        debugger;
       });
   });
 

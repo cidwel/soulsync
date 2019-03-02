@@ -7,6 +7,9 @@
     <list default="true" id="2558684d-4fb2-4523-9c7e-3209c6813840" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/public/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/app.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/bundle.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/bundle.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/public/style.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db/data.db" beforeDir="false" afterPath="$PROJECT_DIR$/server/db/data.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/server.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/server.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -84,11 +87,11 @@
     <splitter split-orientation="horizontal" split-proportion="0.33289006">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file leaf-file-name="server.js" pinned="false" current-in-tab="true">
+          <file leaf-file-name="server.js" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/server/server.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="384">
-                  <caret line="332" column="24" lean-forward="true" selection-start-line="332" selection-start-column="24" selection-end-line="332" selection-end-column="24" />
+                <state relative-caret-position="299">
+                  <caret line="321" column="37" lean-forward="true" selection-start-line="321" selection-start-column="37" selection-end-line="321" selection-end-column="37" />
                 </state>
               </provider>
             </entry>
@@ -120,11 +123,11 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="style.css" pinned="false" current-in-tab="false">
+          <file leaf-file-name="style.css" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/public/style.css">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="428">
-                  <caret line="156" column="22" lean-forward="true" selection-start-line="156" selection-start-column="22" selection-end-line="156" selection-end-column="22" />
+                <state relative-caret-position="343">
+                  <caret line="28" column="19" selection-start-line="28" selection-start-column="19" selection-end-line="28" selection-end-column="19" />
                 </state>
               </provider>
             </entry>
@@ -136,8 +139,8 @@
           <file leaf-file-name="app.js" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/public/app.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="309">
-                  <caret line="442" column="16" selection-start-line="442" selection-start-column="16" selection-end-line="442" selection-end-column="16" />
+                <state relative-caret-position="326">
+                  <caret line="439" lean-forward="true" selection-start-line="439" selection-end-line="439" />
                   <folding>
                     <element signature="n#!!doc" expanded="true" />
                   </folding>
@@ -166,8 +169,8 @@
           <file leaf-file-name="data.db" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/server/db/data.db">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="51">
-                  <caret line="3" lean-forward="true" selection-start-line="3" selection-end-line="3" />
+                <state relative-caret-position="17">
+                  <caret line="1" lean-forward="true" selection-start-line="1" selection-end-line="1" />
                 </state>
               </provider>
             </entry>
@@ -194,7 +197,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>dequeueVideo</find>
       <find>serverpla</find>
       <find>bootstr</find>
       <find>history</find>
@@ -212,7 +214,6 @@
       <find>thumbna</find>
       <find>youtubethu</find>
       <find>title</find>
-      <find>toggleFavVideo</find>
       <find>handlefa</find>
       <find>youtube</find>
       <find>faved</find>
@@ -224,6 +225,8 @@
       <find>favedBy</find>
       <find>refresh</find>
       <find>atob</find>
+      <find>toggleFavVideo</find>
+      <find>debugger</find>
     </findStrings>
     <replaceStrings>
       <replace>serverListPlaylist</replace>
@@ -249,12 +252,12 @@
         <option value="$PROJECT_DIR$/.eslintrc" />
         <option value="$PROJECT_DIR$/package.json" />
         <option value="$PROJECT_DIR$/server/database.js" />
-        <option value="$PROJECT_DIR$/public/style.css" />
         <option value="$PROJECT_DIR$/server/server.js" />
         <option value="$PROJECT_DIR$/server/db/data.db" />
         <option value="$PROJECT_DIR$/public/youtube.js" />
         <option value="$PROJECT_DIR$/public/play.html" />
         <option value="$PROJECT_DIR$/public/app.js" />
+        <option value="$PROJECT_DIR$/public/style.css" />
       </list>
     </option>
   </component>
@@ -440,12 +443,12 @@
       <workItem from="1551049680314" duration="13525000" />
       <workItem from="1551392395356" duration="9472000" />
       <workItem from="1551461533612" duration="1199000" />
-      <workItem from="1551464360313" duration="21689000" />
+      <workItem from="1551464360313" duration="22124000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="177600000" />
+    <option name="totallyTimeSpent" value="178035000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -521,13 +524,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/server/server.js</url>
-          <line>135</line>
-          <properties lambdaOrdinal="-1" />
-          <option name="timeStamp" value="11" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/server/server.js</url>
-          <line>316</line>
+          <line>310</line>
           <properties lambdaOrdinal="-1" />
           <option name="timeStamp" value="13" />
         </line-breakpoint>
@@ -842,13 +839,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/style.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="428">
-          <caret line="156" column="22" lean-forward="true" selection-start-line="156" selection-start-column="22" selection-end-line="156" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/.eslintrc">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="187">
@@ -858,8 +848,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/server/db/data.db">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="3" lean-forward="true" selection-start-line="3" selection-end-line="3" />
+        <state relative-caret-position="17">
+          <caret line="1" lean-forward="true" selection-start-line="1" selection-end-line="1" />
         </state>
       </provider>
     </entry>
@@ -877,20 +867,27 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/server/server.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="384">
-          <caret line="332" column="24" lean-forward="true" selection-start-line="332" selection-start-column="24" selection-end-line="332" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/public/app.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="309">
-          <caret line="442" column="16" selection-start-line="442" selection-start-column="16" selection-end-line="442" selection-end-column="16" />
+        <state relative-caret-position="326">
+          <caret line="439" lean-forward="true" selection-start-line="439" selection-end-line="439" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/server.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="299">
+          <caret line="321" column="37" lean-forward="true" selection-start-line="321" selection-start-column="37" selection-end-line="321" selection-end-column="37" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/style.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="343">
+          <caret line="28" column="19" selection-start-line="28" selection-start-column="19" selection-end-line="28" selection-end-column="19" />
         </state>
       </provider>
     </entry>

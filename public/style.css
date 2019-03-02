@@ -25,6 +25,9 @@
     background-color: #545b62;
     display: none;
 }
+.favList {
+    overflow: auto;
+}
 .serverPlaylist {
     display:block;
 }

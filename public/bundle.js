@@ -11307,7 +11307,6 @@ socket.on('updateClientResults', (data, goSyncVideoClientId) => {
 
 socket.on('playlistUpdated', (receivedServerPlaylist, favedData) => {
   console.log("playlist updated!");
-  debugger;
   window.favedData = favedData; // update it
   window.refillFavedData(receivedServerPlaylist);
   window.serverPlaylist = receivedServerPlaylist;
@@ -11355,7 +11354,6 @@ function refreshList(dataList, $dom, reverse = false) {
 
   const videoList = videoHistoryCopy.reduce((old, curr, index) => {
 
-    debugger;
     if ($dom.selector === ".favs" && !window.showAllFavs && !curr.favedBy.includes(window.clientId)) {
       return old;
     }
@@ -11411,7 +11409,6 @@ window.refillFavedData = (videoList) => {
   window.favedData.forEach(favedVideo => {
     const foundVideo = videoList.find(x => x.videoId === favedVideo.videoId);
     if (foundVideo) {
-      debugger;
       favedVideo.thumbnail = foundVideo.thumbnail;
       favedVideo.title = foundVideo.title;
       favedVideo.duration = foundVideo.duration;
@@ -11455,7 +11452,6 @@ window.queueVideo = function (videoData) {
 };
 
 window.dequeueVideoByIndex = (index) => {
-  debugger;
   const videoData = window.serverPlaylist[index];
   videoData.clientId = window.clientId;
   videoData.clientName = window.clientName;
@@ -11601,7 +11597,6 @@ window.changeTab = function (list) {
 
 
 window.changeFavVisibility = () => {
-  debugger;
   window.showAllFavs = !window.showAllFavs;
   refreshList(window.favedData, $('.favs'));
 

@@ -14,7 +14,7 @@ window.socket = io();
 const cookieClientName = Cookies.get('clientName');
 const cookieClientId = Cookies.get('clientId');
 window.clientName = cookieClientName || generateRandomAnimalName();
-window.clientId = cookieClientId || Cookies.set('clientId',uuidv4())
+window.clientId = cookieClientId || Cookies.set('clientId', uuidv4());
 window.room = window.location.search.split('?')[1];
 
 const urlParams = new URLSearchParams(window.location.search);
@@ -211,7 +211,7 @@ socket.on('updateClientResults', (data, goSyncVideoClientId) => {
 });
 
 socket.on('playlistUpdated', (receivedServerPlaylist, favedData) => {
-  console.log("playlist updated!");
+  console.log('playlist updated!');
   window.favedData = favedData; // update it
   window.refillFavedData(receivedServerPlaylist);
   window.serverPlaylist = receivedServerPlaylist;
@@ -251,15 +251,12 @@ function getVideoUrlData(url) {
 }
 
 
-
-
 function refreshList(dataList, $dom, reverse = false) {
   const videoHistoryCopy = (reverse) ? dataList.slice(0).reverse() : dataList.slice(0);
 
 
   const videoList = videoHistoryCopy.reduce((old, curr, index) => {
-
-    if ($dom.selector === ".favs" && !window.showAllFavs && !curr.favedBy.includes(window.clientId)) {
+    if ($dom.selector === '.favs' && !window.showAllFavs && !curr.favedBy.includes(window.clientId)) {
       return old;
     }
 
@@ -267,19 +264,17 @@ function refreshList(dataList, $dom, reverse = false) {
     const favedByUser = favedVideo && favedVideo.favedBy && favedVideo.favedBy.find(x => x === window.clientId);
     const favedByUserText = (favedByUser) ? 'fas' : 'far';
 
-    const dequeueVideoEl = ($dom.selector === ".serverPlaylist") ? `<i onClick="event.stopPropagation(); window.dequeueVideoByIndex(${index})" class="fa fa-times"/>` : '';
+    const dequeueVideoEl = ($dom.selector === '.serverPlaylist') ? `<i onClick="event.stopPropagation(); window.dequeueVideoByIndex(${index})" class="fa fa-times"/>` : '';
 
+    const base64title = window.btoa(unescape(encodeURIComponent(curr.title)));
+    const favElement = ($dom.selector !== '.localHistory') ? `<span class="videoCommands"><i onClick="event.stopPropagation(); window.handleFavVideo('${curr.videoId}', '${curr.url}', '${base64title}', ${curr.duration})" class="${favedByUserText} fa-star"/>` : '';
 
-
-
-
-    const base64title = window.btoa(unescape(encodeURIComponent(curr.title)))
     return `${old}
       <li videoId="${curr.videoId}" onClick={broadcastVideo("${curr.videoId}",0)}>
         <div ><img class="thumbnail" src="${curr.thumbnail.default.url}"/></div>
         <div class="thumbTextWrapper">
             ${curr.title}<br><span class="duration">${secondsToClock(curr.duration)}</span>
-            <span class="videoCommands"><i onClick="event.stopPropagation(); window.handleFavVideo('${curr.videoId}', '${curr.url}', '${base64title}', ${curr.duration})" class="${favedByUserText} fa-star"/>${dequeueVideoEl}</span>
+            ${favElement}${dequeueVideoEl}</span>
         </div>
       </li>
     `;
@@ -311,7 +306,7 @@ window.getStatus = function () {
 };
 
 window.refillFavedData = (videoList) => {
-  window.favedData.forEach(favedVideo => {
+  window.favedData.forEach((favedVideo) => {
     const foundVideo = videoList.find(x => x.videoId === favedVideo.videoId);
     if (foundVideo) {
       favedVideo.thumbnail = foundVideo.thumbnail;
@@ -319,11 +314,10 @@ window.refillFavedData = (videoList) => {
       favedVideo.duration = foundVideo.duration;
       favedVideo.url = foundVideo.url;
     } else {
-      favedVideo.thumbnail = youtubeThumbnail(favedVideo.url)
+      favedVideo.thumbnail = youtubeThumbnail(favedVideo.url);
     }
   });
-
-}
+};
 
 
 window.broadcastVideo = function (videoId = null, time) {
@@ -361,9 +355,7 @@ window.dequeueVideoByIndex = (index) => {
   videoData.clientId = window.clientId;
   videoData.clientName = window.clientName;
   window.socket.emit('dequeueVideo', videoData, index);
-
-
-}
+};
 
 window.syncVideo = function () {
   log("Let's ask server for the updated time!");
@@ -435,7 +427,6 @@ window.log = (string) => {
 };
 
 window.handleFavVideo = (videoId, url, b64title, duration) => {
-
   const title = decodeURIComponent(escape(window.atob(b64title)));
 
   const videoData = {
@@ -445,7 +436,7 @@ window.handleFavVideo = (videoId, url, b64title, duration) => {
     url,
     title,
     duration,
-  }
+  };
   socket.emit('toggleFavVideo', videoData);
 };
 
@@ -453,7 +444,7 @@ window.handleFavVideo = (videoId, url, b64title, duration) => {
 /*
 
 window.updateTime = function (seconds) {
-  $("#personalTime").text(secondsToClock(seconds))
+  $("#personalTime").text(secondsToClock(se7conds))
 }
 
 window.pauseTime = function (refreshData) {
@@ -500,9 +491,7 @@ window.changeTab = function (list) {
 };
 
 
-
 window.changeFavVisibility = () => {
   window.showAllFavs = !window.showAllFavs;
   refreshList(window.favedData, $('.favs'));
-
-}
+};

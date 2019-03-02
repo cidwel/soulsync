@@ -275,7 +275,7 @@ function refreshList(dataList, $dom, reverse = false) {
 
 
 
-    const base64title = btoa(curr.title);
+    const base64title = window.btoa(unescape(encodeURIComponent(curr.title)))
     return `${old}
       <li videoId="${curr.videoId}" onClick={broadcastVideo("${curr.videoId}",0)}>
         <div ><img class="thumbnail" src="${curr.thumbnail.default.url}"/></div>
@@ -440,7 +440,7 @@ window.log = (string) => {
 
 window.handleFavVideo = (videoId, url, b64title, duration) => {
 
-  const title = atob(b64title);
+  const title = decodeURIComponent(escape(window.atob(b64title)));
 
   const videoData = {
     videoId,

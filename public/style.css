@@ -188,4 +188,32 @@
     font-weight: bold;
     font-size: 23px;
     text-align: center;
-    line-height: 137px;}
+    line-height: 137px;
+}
+
+.youtubeSearch {
+    margin-bottom: 8px;
+    margin-left:20px;
+    color: #aaaaaa;
+}
+
+#youtubeSearchInput {
+    margin-left: 10px;
+    border-radius: 10px;
+    padding-left: 10px;
+    background-color: #383838;
+    border: none;
+    color: #a7a7a7;
+    margin-top: 10px;
+    width: 200px;
+}
+
+#youtubeSearchInput:focus {
+    border: none;
+}
+
+#youtubeSearchButton {
+    border: none;
+    color: #c8c8c8;
+    background: inherit;
+}

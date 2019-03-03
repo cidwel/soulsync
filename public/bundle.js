@@ -13941,7 +13941,7 @@ socket.on('newClient', (newClient) => {
 
 
 socket.on('youtubeSearchResults', (results) => {
-  refreshList(results, $('.youtubeSearch'));
+  refreshList(results, $('.searchResults'));
 
 });
 

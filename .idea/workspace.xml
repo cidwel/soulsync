@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/server/server.js" line="41" />
+    <bookmark url="file://$PROJECT_DIR$/server/server.js" line="39" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2558684d-4fb2-4523-9c7e-3209c6813840" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/app.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/bundle.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/bundle.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/play.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/play.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/public/style.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db/data.db" beforeDir="false" afterPath="$PROJECT_DIR$/server/db/data.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/server.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/server.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -81,14 +87,23 @@
     <favorites_list name="soulsync" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.4339539">
+    <splitter split-orientation="horizontal" split-proportion="0.44193262">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
           <file leaf-file-name="server.js" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/server/server.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="255">
-                  <caret line="15" lean-forward="true" selection-start-line="15" selection-end-line="15" />
+                <state relative-caret-position="187">
+                  <caret line="11" column="16" selection-start-line="11" selection-start-column="16" selection-end-line="11" selection-end-column="16" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="index.js" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/node_modules/youtube-search-promise/index.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="428">
+                  <caret line="30" column="18" lean-forward="true" selection-start-line="30" selection-start-column="18" selection-end-line="30" selection-end-column="18" />
                 </state>
               </provider>
             </entry>
@@ -105,17 +120,8 @@
           <file leaf-file-name="socket.js" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/node_modules/socket.io/lib/socket.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="8908">
-                  <caret line="524" column="16" selection-start-line="524" selection-start-column="16" selection-end-line="524" selection-end-column="16" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="package.json" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/package.json">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="85">
-                  <caret line="5" selection-start-line="5" selection-end-line="5" />
+                <state relative-caret-position="119">
+                  <caret line="530" column="34" lean-forward="true" selection-start-line="530" selection-start-column="34" selection-end-line="530" selection-end-column="34" />
                 </state>
               </provider>
             </entry>
@@ -123,8 +129,8 @@
           <file leaf-file-name="style.css" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/public/style.css">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="883">
-                  <caret line="190" column="23" selection-start-line="190" selection-start-column="23" selection-end-line="190" selection-end-column="23" />
+                <state relative-caret-position="136">
+                  <caret line="8" column="8" lean-forward="true" selection-start-line="8" selection-start-column="8" selection-end-line="8" selection-end-column="8" />
                 </state>
               </provider>
             </entry>
@@ -136,8 +142,8 @@
           <file leaf-file-name="app.js" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/public/app.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="41">
-                  <caret line="319" column="26" lean-forward="true" selection-start-line="319" selection-start-column="26" selection-end-line="319" selection-end-column="26" />
+                <state relative-caret-position="285">
+                  <caret line="71" column="68" lean-forward="true" selection-start-line="71" selection-start-column="68" selection-end-line="71" selection-end-column="68" />
                   <folding>
                     <element signature="n#!!doc" expanded="true" />
                   </folding>
@@ -157,7 +163,7 @@
           <file leaf-file-name="youtube.js" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/public/youtube.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="-371">
+                <state relative-caret-position="-96">
                   <caret line="65" selection-start-line="65" selection-end-line="65" />
                 </state>
               </provider>
@@ -175,8 +181,8 @@
           <file leaf-file-name="play.html" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/public/play.html">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="262">
-                  <caret line="42" column="20" lean-forward="true" selection-start-line="42" selection-start-column="20" selection-end-line="42" selection-end-column="20" />
+                <state relative-caret-position="506">
+                  <caret line="60" lean-forward="true" selection-start-line="60" selection-end-line="60" />
                 </state>
               </provider>
             </entry>
@@ -194,36 +200,36 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>Show all</find>
-      <find>star</find>
-      <find>handleFavVi</find>
-      <find>getvideo</find>
-      <find>btoa</find>
-      <find>refreshlist</find>
-      <find>far</find>
-      <find>favVideo</find>
-      <find>window.fav</find>
-      <find>favStar</find>
-      <find>favs</find>
-      <find>changefa</find>
-      <find>window.favedData =</find>
-      <find>fa-pl</find>
-      <find>addtoplayl</find>
-      <find>queueVideo</find>
-      <find>onClick=&quot;event.stopPropagation(); window.handleFavVideo('${curr.videoId}</find>
-      <find>queuevideo</find>
-      <find>dequeuevideo</find>
-      <find>playVideo</find>
-      <find>refresh</find>
-      <find>favedByUserText</find>
-      <find>fas</find>
-      <find>boo</find>
-      <find>fav</find>
-      <find>emitUpdatePlaylist</find>
-      <find>wee</find>
-      <find>interval</find>
-      <find>added wee</find>
       <find>debugger</find>
+      <find>localhistory</find>
+      <find>client asked to fav a vid</find>
+      <find>emitupdate</find>
+      <find>playlistupdate</find>
+      <find>history</find>
+      <find>videoHistor</find>
+      <find>videoHisto</find>
+      <find>w.handleFavVideo = (videoId, url, b64title, duration)</find>
+      <find>fas</find>
+      <find>toggleFavVideo</find>
+      <find>youtube</find>
+      <find>added wee</find>
+      <find>changeTab</find>
+      <find>youtubeList</find>
+      <find>emit</find>
+      <find>window.sock</find>
+      <find>changeClientName</find>
+      <find>searchYoutubeHandler</find>
+      <find>checkSyncGet</find>
+      <find>$(&quot;#youtubeSearchInput&quot;);</find>
+      <find>io.to(`${socketId}`).emit('hey', 'I just met you');</find>
+      <find>sear</find>
+      <find>thumbnail</find>
+      <find>debugg</find>
+      <find>youtubeSearchResults</find>
+      <find>favlist</find>
+      <find>20</find>
+      <find>refreshlist</find>
+      <find>prompt</find>
     </findStrings>
     <replaceStrings>
       <replace>serverListPlaylist</replace>
@@ -251,8 +257,8 @@
         <option value="$PROJECT_DIR$/server/database.js" />
         <option value="$PROJECT_DIR$/server/db/data.db" />
         <option value="$PROJECT_DIR$/public/youtube.js" />
-        <option value="$PROJECT_DIR$/public/style.css" />
         <option value="$PROJECT_DIR$/public/play.html" />
+        <option value="$PROJECT_DIR$/public/style.css" />
         <option value="$PROJECT_DIR$/server/server.js" />
         <option value="$PROJECT_DIR$/public/app.js" />
       </list>
@@ -279,9 +285,10 @@
     </packageJsonPaths>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="y" value="23" />
+    <option name="x" value="-48" />
+    <option name="y" value="388" />
     <option name="width" value="2560" />
-    <option name="height" value="1417" />
+    <option name="height" value="1400" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -458,12 +465,12 @@
       <workItem from="1551049680314" duration="13525000" />
       <workItem from="1551392395356" duration="9472000" />
       <workItem from="1551461533612" duration="1199000" />
-      <workItem from="1551464360313" duration="36428000" />
+      <workItem from="1551464360313" duration="46263000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="192339000" />
+    <option name="totallyTimeSpent" value="202174000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -485,9 +492,9 @@
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
       <window_info anchor="bottom" id="Find" order="1" />
       <window_info anchor="bottom" id="Version Control" order="8" weight="0.32858273" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.3665875" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.3665875" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="9" visible="true" weight="0.23515439" />
+      <window_info anchor="bottom" id="Terminal" order="9" weight="0.23515439" />
       <window_info id="Favorites" order="2" sideWeight="0.5032538" side_tool="true" weight="0.10015898" />
       <window_info anchor="bottom" id="Debug" order="5" weight="0.39904988" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -538,23 +545,40 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/server/server.js</url>
-          <line>324</line>
+          <url>file://$PROJECT_DIR$/public/app.js</url>
+          <line>523</line>
           <properties lambdaOrdinal="-1" />
-          <option name="timeStamp" value="15" />
+          <option name="timeStamp" value="18" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/server/server.js</url>
-          <line>322</line>
+          <line>284</line>
           <properties lambdaOrdinal="-1" />
-          <option name="timeStamp" value="17" />
+          <option name="timeStamp" value="19" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/server/server.js</url>
+          <line>303</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="21" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/server/server.js</url>
+          <line>300</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="22" />
         </line-breakpoint>
       </breakpoints>
-      <option name="time" value="18" />
+      <option name="time" value="23" />
     </breakpoint-manager>
   </component>
   <component name="debuggerHistoryManager">
     <expressions id="evaluateExpression">
+      <expression>
+        <expression-string>results</expression-string>
+        <language-id>JavaScript</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
       <expression>
         <expression-string>Object.keys(res).length</expression-string>
         <language-id>JavaScript</language-id>
@@ -568,13 +592,6 @@
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/public/multiple.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1037">
-          <caret line="61" lean-forward="true" selection-start-line="61" selection-end-line="61" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$APPLICATION_CONFIG_DIR$/scratches/scratch_43.txt">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -808,13 +825,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/node_modules/socket.io/lib/socket.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="8908">
-          <caret line="524" column="16" selection-start-line="524" selection-start-column="16" selection-end-line="524" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external/lib.dom.d.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="250">
@@ -839,10 +849,24 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/tippy.js/themes/light.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="74" selection-start-column="74" selection-end-column="74" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/package.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="5" selection-start-line="5" selection-end-line="5" />
+        <state relative-caret-position="119">
+          <caret line="7" column="34" selection-start-line="7" selection-start-column="34" selection-end-line="8" selection-end-column="34" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/database.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="7" selection-start-line="7" selection-end-line="7" />
         </state>
       </provider>
     </entry>
@@ -860,55 +884,55 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/youtube.js">
+    <entry file="file://$PROJECT_DIR$/node_modules/youtube-search-promise/index.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-371">
-          <caret line="65" selection-start-line="65" selection-end-line="65" />
+        <state relative-caret-position="428">
+          <caret line="30" column="18" lean-forward="true" selection-start-line="30" selection-start-column="18" selection-end-line="30" selection-end-column="18" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/server/database.js">
+    <entry file="file://$PROJECT_DIR$/node_modules/socket.io/lib/socket.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="119">
-          <caret line="7" selection-start-line="7" selection-end-line="7" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/node_modules/tippy.js/themes/light.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="74" selection-start-column="74" selection-end-column="74" />
+          <caret line="530" column="34" lean-forward="true" selection-start-line="530" selection-start-column="34" selection-end-line="530" selection-end-column="34" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/public/style.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="883">
-          <caret line="190" column="23" selection-start-line="190" selection-start-column="23" selection-end-line="190" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/play.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="262">
-          <caret line="42" column="20" lean-forward="true" selection-start-line="42" selection-start-column="20" selection-end-line="42" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/app.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="41">
-          <caret line="319" column="26" lean-forward="true" selection-start-line="319" selection-start-column="26" selection-end-line="319" selection-end-column="26" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
+        <state relative-caret-position="136">
+          <caret line="8" column="8" lean-forward="true" selection-start-line="8" selection-start-column="8" selection-end-line="8" selection-end-column="8" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/server/server.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="15" lean-forward="true" selection-start-line="15" selection-end-line="15" />
+        <state relative-caret-position="187">
+          <caret line="11" column="16" selection-start-line="11" selection-start-column="16" selection-end-line="11" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/play.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="506">
+          <caret line="60" lean-forward="true" selection-start-line="60" selection-end-line="60" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/youtube.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-96">
+          <caret line="65" selection-start-line="65" selection-end-line="65" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/app.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="285">
+          <caret line="71" column="68" lean-forward="true" selection-start-line="71" selection-start-column="68" selection-end-line="71" selection-end-column="68" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

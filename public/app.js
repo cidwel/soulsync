@@ -69,7 +69,7 @@ ytStatus[5] = 'Paused'; // is cued!
 
 if (!cookieClientName) {
   const selectedCookieName = prompt('Please enter your name', window.clientName);
-  if (selectedCookieName !== window.clientName) {
+  if (selectedCookieName && selectedCookieName !== window.clientName) {
     const oldName = window.clientName;
     window.clientName = selectedCookieName;
     Cookies.set('clientName', selectedCookieName);
@@ -184,7 +184,14 @@ socket.on('continueVideo', () => {
 });
 
 socket.on('checkSyncAsk', () => {
-  socket.emit('checkSyncGet', getStatus());
+  const videoStatus = getStatus();
+  if (videoStatus) {
+    socket.emit('checkSyncGet', videoStatus);
+  } else {
+    console.error("CAN'T GET STATUS!");
+    debugger;
+  }
+
 });
 
 socket.on('updateClientResults', (data, goSyncVideoClientId) => {
@@ -202,6 +209,7 @@ socket.on('updateClientResults', (data, goSyncVideoClientId) => {
 
   refreshList(data.serverPlaylist, $('.serverPlaylist'));
   refreshList(window.favedData, $('.favs'));
+  refreshList(window.videoHistory, $('.localHistory'));
 
 
   if (goSyncVideoClientId && data.connectedClients.length > 1 && goSyncVideoClientId === window.clientId) {
@@ -228,12 +236,21 @@ socket.on('playlistUpdated', (receivedServerPlaylist, favedData) => {
   window.serverPlaylist = receivedServerPlaylist;
   refreshList(receivedServerPlaylist, $('.serverPlaylist'));
   refreshList(favedData, $('.favs'));
+  refreshList(window.videoHistory, $('.localHistory'));
+
+
 });
 
 socket.on('newClient', (newClient) => {
   if (newClient.clientId !== window.clientId) {
     chime.play();
   }
+});
+
+
+socket.on('youtubeSearchResults', (results) => {
+  refreshList(results, $('.youtubeSearch'));
+
 });
 
 function sendVideoStatusToServer(videoData, goSync) {
@@ -294,17 +311,17 @@ function refreshList(dataList, $dom, reverse = false) {
       const dequeueVideoEl = ($dom.selector === '.serverPlaylist') ? `<i onClick="event.stopPropagation(); window.dequeueVideoByIndex(${index})" class="fa fa-times"/>` : '';
 
       const base64title = window.btoa(unescape(encodeURIComponent(curr.title)));
-      const favElement = ($dom.selector !== '.localHistory') ? `<i data-tippy-content="Added!" onClick="event.stopPropagation(); window.handleFavVideo('${curr.videoId}', '${curr.url}', '${base64title}', ${curr.duration})" class="${favedByUserText} fa-star"/>` : '';
-
+      const favElement = `<i data-tippy-content="Added!" onClick="event.stopPropagation(); window.handleFavVideo('${curr.videoId}', '${curr.url}', '${base64title}', ${curr.duration})(this)" class="${favedByUserText} fa-star"/>`;
 
       const addToPlaylistEl = ($dom.selector !== '.serverPlaylist') ? `<i class="smallButton addToQueueFromPlaylist fa fa-plus" onClick="event.stopPropagation(); window.queueVideoByUrl('${curr.url}')(this)" />` : '';
 
+      const videoTime = (curr.duration !== -1) ? secondsToClock(curr.duration) : '';
 
       return `${old}
       <li videoId="${curr.videoId}" onClick={broadcastVideo("${curr.videoId}",0)}>
         <div ><img class="thumbnail" src="${curr.thumbnail.default.url}"/></div>
         <div class="thumbTextWrapper">
-            ${curr.title}<br><span class="duration">${secondsToClock(curr.duration)}</span>
+            ${curr.title}<br><span class="duration">${videoTime}</span>
             <span class="videoCommands">${favElement}${dequeueVideoEl}${addToPlaylistEl}</span>
         </div>
       </li>
@@ -366,6 +383,7 @@ window.refillFavedData = (videoList) => {
       favedVideo.title = foundVideo.title;
       favedVideo.duration = foundVideo.duration;
       favedVideo.url = foundVideo.url;
+
     } else {
       favedVideo.thumbnail = youtubeThumbnail(favedVideo.url);
     }
@@ -497,8 +515,15 @@ window.favVideo = () => {
   window.handleFavVideo(videoId, url, b64title, duration);
 };
 
-window.handleFavVideo = (videoId, url, b64title, duration) => {
+window.handleFavVideo = (videoId, url, b64title, duration) => context  => {
   const title = decodeURIComponent(escape(window.atob(b64title)));
+
+  const $context = $(context);
+  if ($context.hasClass('fas')) {
+    $context.removeClass('fas').addClass('far');
+  } else if ($context.hasClass('far')) {
+    $context.removeClass('far').addClass('fas');
+  }
 
   const videoData = {
     videoId,
@@ -551,15 +576,28 @@ window.changeTab = function (list) {
   $('.serverHistory').hide();
   $('.localHistory').hide();
   $('.favList').hide();
+  $('.youtubeList').hide();
 
   $('#serverPlaylist').parent().removeClass('active');
   $('#serverHistory').parent().removeClass('active');
   $('#localHistory').parent().removeClass('active');
   $('#favList').parent().removeClass('active');
+  $('#youtubeList').parent().removeClass('active');
+
 
   $(`.${list}`).show();
   $(`#${list}`).parent().addClass('active');
 };
+
+
+window.searchYoutubeHandler = () => {
+  const searchString = $("#youtubeSearchInput").val();
+  window.socket.emit('searchYoutube', searchString);
+
+
+}
+
+
 
 
 window.changeFavVisibility = () => {

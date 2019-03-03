@@ -53,6 +53,10 @@
                     <input type="radio" onClick={changeTab("favList")} name="list" id="favList" autocomplete="off"> Favs
                 </label>
 
+                <label class="btn btn-secondary ">
+                    <input type="radio" onClick={changeTab("youtubeList")} name="list" id="youtubeList" autocomplete="off"> Search
+                </label>
+
             </div>
 
             <div class="list serverPlaylist">
@@ -85,6 +89,15 @@
 
             </div>
 
+            <div class="list youtubeList">
+                <div class="youtubeSearch">
+                    <input type="text" id="youtubeSearchInput" name="youtubeSearchInput" />
+                    <button onClick="window.searchYoutubeHandler()">Search</button>
+                </div>
+                <div class="noVideosWrapper">
+                    No videos on list
+                </div>
+            </div>
 
 
 

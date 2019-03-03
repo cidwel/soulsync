@@ -6,6 +6,13 @@ const bodyParser = require('body-parser');
 const fetchVideoInfo = require('youtube-info');
 const youtubeThumbnail = require('youtube-thumbnail');
 
+const youtubeSearch = require('youtube-search-promise');
+
+const ytSearchOpts = {
+  maxResults: 20,
+  key: 'AIzaSyCN6CMd8DxWIlmOUh06Ph-VkV9gVgOdWXg',
+};
+
 
 const app = express();
 
@@ -85,7 +92,6 @@ io.on('connection', (socket) => {
         io.to(room).emit('updateClientResults', { connectedClients: connectedClients[room], serverPlaylist: serverPlaylist[room], favedData: res }, clientData.clientId);
       })
       .catch((res) => {});
-
   });
 
 
@@ -212,10 +218,9 @@ io.on('connection', (socket) => {
       console.log('All clients sent their data.. we send sync info!');
 
 
-
       getRoomFavedVideos(room)
         .then((res) => {
-          io.to(room).emit('updateClientResults', { connectedClients: syncedClients[room], serverPlaylist: serverPlaylist[room], favedData: res  });
+          io.to(room).emit('updateClientResults', { connectedClients: syncedClients[room], serverPlaylist: serverPlaylist[room], favedData: res });
           connectedClients[room] = syncedClients[room].slice();
           syncedClients[room] = []; // clear the poll!
         })
@@ -240,10 +245,9 @@ io.on('connection', (socket) => {
 
       getRoomFavedVideos(room)
         .then((res) => {
-          io.to(room).emit('updateClientResults', { connectedClients: connectedClients[room], serverPlaylist: serverPlaylist[room], favedData: res  });
+          io.to(room).emit('updateClientResults', { connectedClients: connectedClients[room], serverPlaylist: serverPlaylist[room], favedData: res });
         })
         .catch((res) => {});
-
     }
   });
 
@@ -263,12 +267,10 @@ io.on('connection', (socket) => {
 
       getRoomFavedVideos(room)
         .then((res) => {
-          io.to(room).emit('updateClientResults', { connectedClients: connectedClients[room], serverPlaylist: serverPlaylist[room], favedData: res  });
+          io.to(room).emit('updateClientResults', { connectedClients: connectedClients[room], serverPlaylist: serverPlaylist[room], favedData: res });
           syncData({ room });
-
         })
         .catch((res) => {});
-
     }
   });
 
@@ -277,6 +279,30 @@ io.on('connection', (socket) => {
     [...allClientLists].forEach((list) => {
       list[room].find(client => client.clientId === clientData.clientId).clientName = clientData.clientNewName;
     });
+  });
+
+  socket.on('searchYoutube', (searchString) => {
+    console.log('Client requested the search');
+    youtubeSearch(searchString, ytSearchOpts)
+      .then((results) => {
+
+        const convertedResults = results.map(video => ({
+          room,
+          videoId: video.id,
+          url: video.link,
+          duration: -1,
+          thumbnail: video.thumbnails,
+          ...video,
+        }));
+
+        console.log(convertedResults[0]);
+
+
+        io.to(`${socket.id}`).emit('youtubeSearchResults', convertedResults);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   });
 
 
@@ -403,5 +429,19 @@ const getRoomFavedVideos = room => db.find({ room });
 db.insert({ casa: true }, (err, newDoc) => {
   console.log(newDoc);
 });
+
+ */
+
+
+/*
+
+search('deadmau5', ytSearchOpts)
+  .then((results) => {
+    console.log(results);
+  })
+  .catch((error) => {
+    console.error(error);
+  });
+
 
  */

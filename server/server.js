@@ -11,7 +11,7 @@ const app = express();
 
 const publicDir = path.join(__dirname, 'public');
 
-const notifyTimerClickSeconds = 10;
+const notifyTimerClickSeconds = 5;
 
 
 const connectedClients = [];
@@ -58,8 +58,8 @@ io.on('connection', (socket) => {
   });
 
   setInterval(() => {
-    // console.log('Interval, sync data!');
-    // syncData({ room });
+    console.log('Interval, sync data!');
+    syncData({ room });
   }, notifyTimerClickSeconds * 1000);
 
   socket.on('disconnect', () => {

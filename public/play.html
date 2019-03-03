@@ -22,6 +22,10 @@
         <button type="button" class="btn btn-primary btn-play" onClick="queueVideoTest()"><i class="fa fa-bone"></i></button>
         <button type="button" class="btn btn-primary btn-play" onClick="pauseVideo()"><i class="fa fa-pause"></i></button>
         <button type="button" class="btn btn-primary btn-play" onClick="syncVideo()"><i class="fa fa-sync"></i></button>
+        <button type="button" class="btn btn-primary btn-play" data-tippy-content="Added!" onClick="favVideo()"><i id="favStar" class="far fa-star"></i></button>
+
+
+
     </div>
 
 
@@ -58,19 +62,21 @@
 
 
             <div class="list serverHistory">
-                <ul>
-                </ul>
+                <div class="noVideosWrapper">
+                    No videos on list
+                </div>
             </div>
 
 
             <div class="list localHistory">
-                <ul>
-                </ul>
+                <div class="noVideosWrapper">
+                    No videos on list
+                </div>
             </div>
 
             <div class="list favList">
                 <div class="favSwitcher">
-                    Show all
+                    Show all channel favs
                     <input onChange="window.changeFavVisibility()" type="checkbox" data-toggle="toggle">
                 </div>
                 <div class="favs">

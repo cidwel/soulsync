@@ -6,6 +6,9 @@ const generateRandomAnimalName = require('random-animal-name-generator');
 const youtubeThumbnail = require('youtube-thumbnail');
 const Cookies = require('js-cookie');
 
+const tippy = require('tippy.js');
+
+
 const chime = new Audio('chime.wav');
 chime.volume = 0.02;
 
@@ -186,10 +189,17 @@ socket.on('checkSyncAsk', () => {
 
 socket.on('updateClientResults', (data, goSyncVideoClientId) => {
   updateClientsData(data.connectedClients);
-  if (data && data.favedData) {
-    window.favedData = data.favedData;
-    window.refillFavedData(data.serverPlaylist);
+  if (data) {
+    if (data.favedData) {
+      window.favedData = data.favedData;
+      changeFavData();
+      window.refillFavedData(data.serverPlaylist);
+    }
+    if (data.serverPlaylist) {
+      window.serverPlaylist = data.serverPlaylist;
+    }
   }
+
   refreshList(data.serverPlaylist, $('.serverPlaylist'));
   refreshList(window.favedData, $('.favs'));
 
@@ -214,6 +224,7 @@ socket.on('playlistUpdated', (receivedServerPlaylist, favedData) => {
   console.log('playlist updated!');
   window.favedData = favedData; // update it
   window.refillFavedData(receivedServerPlaylist);
+  changeFavData();
   window.serverPlaylist = receivedServerPlaylist;
   refreshList(receivedServerPlaylist, $('.serverPlaylist'));
   refreshList(favedData, $('.favs'));
@@ -251,35 +262,70 @@ function getVideoUrlData(url) {
 }
 
 
+const changeFavData = () => {
+  const currentVideo = window.getStatus();
+  const favedVideo = window.favedData.find(x => x.videoId === currentVideo.videoId);
+  const favedByUser = favedVideo && favedVideo.favedBy && favedVideo.favedBy.find(x => x === window.clientId);
+  $('#favStar').removeClass('fas');
+  $('#favStar').removeClass('far');
+  if (favedByUser) {
+    $('#favStar').addClass('fas');
+  } else {
+    $('#favStar').addClass('far');
+  }
+};
+
+
 function refreshList(dataList, $dom, reverse = false) {
   const videoHistoryCopy = (reverse) ? dataList.slice(0).reverse() : dataList.slice(0);
 
 
-  const videoList = videoHistoryCopy.reduce((old, curr, index) => {
-    if ($dom.selector === '.favs' && !window.showAllFavs && !curr.favedBy.includes(window.clientId)) {
-      return old;
-    }
+  if (videoHistoryCopy.length) {
 
-    const favedVideo = window.favedData.find(x => x.videoId === curr.videoId);
-    const favedByUser = favedVideo && favedVideo.favedBy && favedVideo.favedBy.find(x => x === window.clientId);
-    const favedByUserText = (favedByUser) ? 'fas' : 'far';
+    const videoList = videoHistoryCopy.reduce((old, curr, index) => {
+      if ($dom.selector === '.favs' && !window.showAllFavs && !curr.favedBy.includes(window.clientId)) {
+        return old;
+      }
 
-    const dequeueVideoEl = ($dom.selector === '.serverPlaylist') ? `<i onClick="event.stopPropagation(); window.dequeueVideoByIndex(${index})" class="fa fa-times"/>` : '';
+      const favedVideo = window.favedData.find(x => x.videoId === curr.videoId);
+      const favedByUser = favedVideo && favedVideo.favedBy && favedVideo.favedBy.find(x => x === window.clientId);
+      const favedByUserText = (favedByUser) ? 'fas' : 'far';
 
-    const base64title = window.btoa(unescape(encodeURIComponent(curr.title)));
-    const favElement = ($dom.selector !== '.localHistory') ? `<span class="videoCommands"><i onClick="event.stopPropagation(); window.handleFavVideo('${curr.videoId}', '${curr.url}', '${base64title}', ${curr.duration})" class="${favedByUserText} fa-star"/>` : '';
+      const dequeueVideoEl = ($dom.selector === '.serverPlaylist') ? `<i onClick="event.stopPropagation(); window.dequeueVideoByIndex(${index})" class="fa fa-times"/>` : '';
 
-    return `${old}
+      const base64title = window.btoa(unescape(encodeURIComponent(curr.title)));
+      const favElement = ($dom.selector !== '.localHistory') ? `<i data-tippy-content="Added!" onClick="event.stopPropagation(); window.handleFavVideo('${curr.videoId}', '${curr.url}', '${base64title}', ${curr.duration})" class="${favedByUserText} fa-star"/>` : '';
+
+
+      const addToPlaylistEl = ($dom.selector !== '.serverPlaylist') ? `<i class="smallButton addToQueueFromPlaylist fa fa-plus" onClick="event.stopPropagation(); window.queueVideoByUrl('${curr.url}')(this)" />` : '';
+
+
+      return `${old}
       <li videoId="${curr.videoId}" onClick={broadcastVideo("${curr.videoId}",0)}>
         <div ><img class="thumbnail" src="${curr.thumbnail.default.url}"/></div>
         <div class="thumbTextWrapper">
             ${curr.title}<br><span class="duration">${secondsToClock(curr.duration)}</span>
-            ${favElement}${dequeueVideoEl}</span>
+            <span class="videoCommands">${favElement}${dequeueVideoEl}${addToPlaylistEl}</span>
         </div>
       </li>
     `;
-  }, '');
-  $dom.html(`<ul>${videoList}</ul>`);
+    }, '');
+
+    $dom.html(`<ul>${videoList}</ul>`);
+    debugger;
+    tippy('.smallButton', {
+      content: 'Added!',
+      trigger: 'click',
+      arrow: true,
+      arrowType: 'sharp',
+      placement: 'bottom',
+      theme: 'light',
+
+    });
+  } else {
+    $dom.html(`<div class="noVideosWrapper">No videos on list</div>`);
+  }
+
 }
 
 window.playNextVideo = () => {
@@ -342,6 +388,13 @@ window.queueVideoTest = function () {
   queueVideo(getVideoUrlData('https://youtu.be/NspYa8GcPCs'));
   queueVideo(getVideoUrlData('https://youtu.be/by1QWQprONg'));
 };
+
+window.queueVideoByUrl = url => (context) => {
+  debugger;
+  const videoData = getVideoUrlData(url);
+  window.queueVideo(videoData);
+};
+
 
 window.queueVideo = function (videoData) {
   const data = videoData || getVideoUrlData();
@@ -424,6 +477,19 @@ function uuidv4() {
 
 window.log = (string) => {
   console.log(`[${window.clientName}] ${string}`);
+};
+
+window.favVideo = () => {
+  debugger;
+  const currentVideo = window.getStatus();
+  const {
+    videoId,
+    url,
+    duration,
+    title,
+  } = currentVideo;
+  const b64title = window.btoa(unescape(encodeURIComponent(title)));
+  window.handleFavVideo(videoId, url, b64title, duration);
 };
 
 window.handleFavVideo = (videoId, url, b64title, duration) => {

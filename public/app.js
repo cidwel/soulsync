@@ -312,7 +312,6 @@ function refreshList(dataList, $dom, reverse = false) {
     }, '');
 
     $dom.html(`<ul>${videoList}</ul>`);
-    debugger;
     tippy('.smallButton', {
       content: 'Added!',
       trigger: 'click',
@@ -334,21 +333,29 @@ window.playNextVideo = () => {
 
 
 window.getStatus = function () {
-  const videoData = player && player.getVideoData();
-  const videoUrl = player.getVideoUrl();
-  return {
-    clientId: window.clientId,
-    clientName: window.clientName,
-    videoId: videoData && videoData.video_id || null,
-    time: player.getCurrentTime(),
-    title: videoData && videoData.title || null,
-    status: player.getPlayerState(),
-    url: videoUrl,
-    thumbnail: youtubeThumbnail(videoUrl),
-    duration: player.getDuration(),
-    socketId: window.socket.id,
-    room: window.room,
-  };
+  const videoData = player && player.getVideoData && player.getVideoData();
+
+  if (videoData) {
+
+    const videoUrl = player.getVideoUrl();
+    return {
+      clientId: window.clientId,
+      clientName: window.clientName,
+      videoId: videoData && videoData.video_id || null,
+      time: player.getCurrentTime(),
+      title: videoData && videoData.title || null,
+      status: player.getPlayerState(),
+      url: videoUrl,
+      thumbnail: youtubeThumbnail(videoUrl),
+      duration: player.getDuration(),
+      socketId: window.socket.id,
+      room: window.room,
+    };
+
+  } else {
+    return null;
+  }
+
 };
 
 window.refillFavedData = (videoList) => {
@@ -390,7 +397,6 @@ window.queueVideoTest = function () {
 };
 
 window.queueVideoByUrl = url => (context) => {
-  debugger;
   const videoData = getVideoUrlData(url);
   window.queueVideo(videoData);
 };
@@ -480,7 +486,6 @@ window.log = (string) => {
 };
 
 window.favVideo = () => {
-  debugger;
   const currentVideo = window.getStatus();
   const {
     videoId,
